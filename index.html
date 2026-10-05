@@ -675,17 +675,55 @@ async function iniciarCamara() {
 }
 async function capturarSelfie() {
   const msg = document.getElementById('msg4'); msg.innerHTML = '';
+  log('📸 Capturando selfie...');
+
+  // 1) Obtener la imagen del video (o usar la simulada)
   if (!sesion.selfieBase64) {
     const v = document.querySelector('#camaraBox video');
-    if (v) { const c = document.createElement('canvas'); c.width = c.height = 320; c.getContext('2d').drawImage(v,0,0,320,320); sesion.selfieBase64 = c.toDataURL('image/jpeg', .7); }
+    if (v) {
+      const c = document.createElement('canvas');
+      c.width = 320; c.height = 320;
+      c.getContext('2d').drawImage(v, 0, 0, 320, 320);
+      sesion.selfieBase64 = c.toDataURL('image/jpeg', 0.7);
+    }
   }
-  if (stream) stream.getTracks().forEach(t => t.stop());
-  log('POST /api/selfie', 'req');
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+
+  if (!sesion.selfieBase64) {
+    msg.innerHTML = '<div class="error">No se pudo capturar la imagen.</div>';
+    return;
+  }
+  log('  Tamaño base64: ' + sesion.selfieBase64.length + ' caracteres', 'info');
+
+  // 2) Prueba de vida + facematch (simulados)
+  log('→ Ejecutando prueba de vida (liveness)...');
   const score = 85 + Math.floor(Math.random() * 14);
   log(`  Score facial: ${score}/100`, 'ok');
-  await llamarBackend('guardarSelfie', { userId:sesion.userId, dni:sesion.dni, base64: sesion.selfieBase64.substring(0, 8000), score });
-  msg.innerHTML = `<div class="exito">Identidad verificada (${score}/100).</div>`;
-  progreso(4); setTimeout(() => mostrar('p5'), 900);
+  log('→ Comparando con foto del DNI...');
+
+  // 3) Enviar al backend por POST (con base64 COMPLETO)
+  const r = await postBackend('guardarSelfie', {
+    userId: sesion.userId,
+    dni: sesion.dni,
+    base64: sesion.selfieBase64,     // ← SIN substring, va completo
+    score: score
+  });
+
+  if (!r.ok) {
+    log('← Error: ' + (r.error || 'desconocido'), 'err');
+    msg.innerHTML = `<div class="error">No se pudo guardar la selfie: ${r.error || ''}<br><span style="font-size:.7rem">Revisá los permisos de Drive.</span></div>`;
+    return;
+  }
+
+  if (r.url) {
+    log('  📎 Selfie guardada en Drive: ' + r.url, 'ok');
+    log('  📦 Tamaño: ' + (r.tamaño ? Math.round(r.tamaño/1024) + ' KB' : 'OK'), 'info');
+  }
+  log('← 200 OK', 'ok');
+  msg.innerHTML = `<div class="exito">✅ Identidad verificada (score ${score}/100).<br>
+    <span style="font-size:.7rem">Selfie guardada en Drive</span></div>`;
+  progreso(4);
+  setTimeout(() => mostrar('p5'), 1000);
 }
 async function paso5() {
   const msg = document.getElementById('msg5'); msg.innerHTML = '';
