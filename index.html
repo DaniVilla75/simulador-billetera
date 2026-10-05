@@ -27,10 +27,10 @@
   .mp-header .mp-icons span{margin-left:10px;opacity:.9}
   .mp-header .mp-saldo-label{font-size:.75rem;margin-top:14px;opacity:.9}
   .mp-header .mp-saldo{font-size:1.8rem;font-weight:700;margin-top:2px}
-  .mp-header .mp-actions{display:flex;gap:8px;margin-top:14px}
-  .mp-header .mp-actions button{flex:1;padding:8px 4px;border:none;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-size:.7rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+  .mp-header .mp-actions{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .mp-header .mp-actions button{flex:1 0 30%;padding:8px 4px;border:none;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-size:.68rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
   .mp-header .mp-actions button:hover{background:rgba(255,255,255,.3)}
-  .mp-header .mp-actions button .ico{font-size:1.1rem}
+  .mp-header .mp-actions button .ico{font-size:1.05rem}
   .mp-content{flex:1;padding:12px 12px 0;overflow-y:auto;max-height:480px}
   .mp-card{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
   .mp-card h4{font-size:.8rem;color:#666;font-weight:600;margin-bottom:8px}
@@ -41,10 +41,10 @@
   .mp-row .right{text-align:right;font-weight:600}
   .mp-row .right.pos{color:#00a650}
   .mp-row .right.neg{color:#d32f2f}
-  .mp-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:flex;justify-content:space-around;padding:8px 0 10px;overflow-x:auto}
-  .mp-nav-item{flex:1 0 auto;min-width:56px;display:flex;flex-direction:column;align-items:center;font-size:.55rem;color:#888;cursor:pointer;gap:2px}
+  .mp-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:flex;padding:6px 4px 8px;overflow-x:auto;gap:2px}
+  .mp-nav-item{flex:1 0 auto;min-width:52px;display:flex;flex-direction:column;align-items:center;font-size:.55rem;color:#888;cursor:pointer;gap:2px}
   .mp-nav-item.active{color:#009ee3;font-weight:700}
-  .mp-nav-item .ico{font-size:1.1rem}
+  .mp-nav-item .ico{font-size:1.05rem}
   .pantalla{display:none}
   .pantalla.activa{display:block}
   .form-app{padding:14px}
@@ -94,54 +94,46 @@
   .factura-card .info .det{font-size:.68rem;color:#888}
   .factura-card .monto{text-align:right;font-weight:700;font-size:.9rem;color:#111}
   .factura-card .monto button{display:block;margin-top:4px;padding:5px 10px;background:#009ee3;color:#fff;border:none;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer}
-  .veraz-card{border-radius:12px;padding:14px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
+  .veraz-card{border-radius:12px;padding:14px;margin-bottom:10px;color:#fff}
   .veraz-card .titulo{font-size:.7rem;opacity:.9}
   .veraz-card .cat{font-size:1.6rem;font-weight:700;margin:4px 0}
   .veraz-card .detalle{font-size:.72rem;opacity:.9}
   .veraz-card .score-bar{background:rgba(255,255,255,.25);height:6px;border-radius:3px;margin-top:8px;overflow:hidden}
   .veraz-card .score-bar .fill{height:100%;background:#fff}
-  .tipo-prestamo{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
-  .tipo-prestamo:hover{border-color:#009ee3}
-  .tipo-prestamo .head{display:flex;justify-content:space-between;align-items:center}
-  .tipo-prestamo .nombre{font-weight:700;font-size:.9rem;color:#111}
-  .tipo-prestamo .tna{background:#009ee3;color:#fff;padding:3px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
-  .tipo-prestamo .desc{font-size:.72rem;color:#666;margin-top:4px}
-  .tipo-prestamo .rango{font-size:.68rem;color:#888;margin-top:4px}
-  .simulador-box{background:#f0f9ff;border:1px solid #009ee3;border-radius:10px;padding:12px;margin:10px 0}
-  .simulador-box .fila{display:flex;justify-content:space-between;padding:6px 0;font-size:.82rem;border-bottom:1px dashed #cbd5e1}
-  .simulador-box .fila:last-child{border-bottom:none}
-  .simulador-box .fila .lbl{color:#666}
-  .simulador-box .fila .val{font-weight:700;color:#111}
-  .simulador-box .fila.total{font-size:1rem;padding-top:10px}
-  .simulador-box .fila.total .val{color:#009ee3}
-  .prestamo-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-  .prestamo-item .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-  .prestamo-item .head .tipo{font-weight:700;font-size:.88rem;color:#111}
-  .prestamo-item .head .estado{padding:3px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
-  .prestamo-item .head .estado.ACTIVO{background:#dcfce7;color:#166534}
-  .prestamo-item .head .estado.CANCELADO{background:#e5e7eb;color:#4b5563}
-  .prestamo-item .head .estado.REFINANCIADO{background:#fef3c7;color:#78350f}
-  .prestamo-item .info{font-size:.72rem;color:#666}
-  .prestamo-item .info b{color:#111}
-  .cuota-mini{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:.75rem}
-  .cuota-mini:last-child{border-bottom:none}
-  .cuota-mini .num{background:#f3f4f6;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
-  .cuota-mini.PAGADA{opacity:.55}
-  .cuota-mini.PAGADA .num{background:#00a650;color:#fff}
-  .cuota-mini.REFINANCIADA{opacity:.55}
-  .cuota-mini.REFINANCIADA .num{background:#f59e0b;color:#fff}
-  .cuota-mini .btn-pagar{padding:4px 10px;background:#009ee3;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
-  .cuota-mini .btn-pagar:hover{background:#0089c9}
-  .cuota-mini .btn-mora{padding:4px 10px;background:#dc2626;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
-  .pf-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-  .pf-item .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-  .pf-item .head .tipo{font-weight:700;font-size:.88rem;color:#111}
-  .pf-item .head .estado{padding:3px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
-  .pf-item .head .estado.ACTIVO{background:#dbeafe;color:#1e40af}
-  .pf-item .head .estado.VENCIDO{background:#dcfce7;color:#166534}
-  .pf-item .head .estado.RESCATADO{background:#e5e7eb;color:#4b5563}
-  .pf-item .info{font-size:.72rem;color:#666}
-  .pf-item .info b{color:#111}
+  .tipo-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent}
+  .tipo-item:hover{border-color:#009ee3}
+  .tipo-item .head{display:flex;justify-content:space-between;align-items:center}
+  .tipo-item .nombre{font-weight:700;font-size:.9rem;color:#111}
+  .tipo-item .tna{background:#009ee3;color:#fff;padding:3px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+  .tipo-item .desc{font-size:.72rem;color:#666;margin-top:4px}
+  .tipo-item .rango{font-size:.68rem;color:#888;margin-top:4px}
+  .sim-box{background:#f0f9ff;border:1px solid #009ee3;border-radius:10px;padding:12px;margin:10px 0}
+  .sim-box .fila{display:flex;justify-content:space-between;padding:6px 0;font-size:.82rem;border-bottom:1px dashed #cbd5e1}
+  .sim-box .fila:last-child{border-bottom:none}
+  .sim-box .fila .lbl{color:#666}
+  .sim-box .fila .val{font-weight:700;color:#111}
+  .sim-box .fila.total{font-size:1rem;padding-top:10px}
+  .sim-box .fila.total .val{color:#009ee3}
+  .item-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .item-card .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .item-card .head .tipo{font-weight:700;font-size:.88rem;color:#111}
+  .item-card .head .estado{padding:3px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
+  .item-card .head .estado.ACTIVO{background:#dcfce7;color:#166534}
+  .item-card .head .estado.CANCELADO{background:#e5e7eb;color:#4b5563}
+  .item-card .head .estado.REFINANCIADO{background:#fef3c7;color:#78350f}
+  .item-card .head .estado.VENCIDO{background:#dcfce7;color:#166534}
+  .item-card .head .estado.RESCATADO{background:#e5e7eb;color:#4b5563}
+  .item-card .info{font-size:.72rem;color:#666}
+  .item-card .info b{color:#111}
+  .cuota-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:.75rem}
+  .cuota-item:last-child{border-bottom:none}
+  .cuota-item .num{background:#f3f4f6;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+  .cuota-item.PAGADA{opacity:.55}
+  .cuota-item.PAGADA .num{background:#00a650;color:#fff}
+  .cuota-item.REFINANCIADA{opacity:.55}
+  .cuota-item.REFINANCIADA .num{background:#f59e0b;color:#fff}
+  .cuota-item .btn-pagar{padding:4px 10px;background:#009ee3;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
+  .cuota-item .btn-mora{padding:4px 10px;background:#dc2626;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
   #backend{font-family:'Courier New',monospace;font-size:.72rem}
   #log{max-height:700px;overflow-y:auto}
   .log-linea{padding:3px 0;border-bottom:1px dashed #334155;word-wrap:break-word}
@@ -164,7 +156,7 @@
   <div class="panel" id="app-wrapper">
     <h2>📱 App del alumno</h2>
     <div class="mp-phone">
-      <div class="mp-header" id="mpHeader">
+      <div class="mp-header">
         <div class="mp-top">
           <span class="mp-greeting" id="mpGreeting">Bienvenido 👋</span>
           <span class="mp-icons">🔔 ⚙️</span>
@@ -172,11 +164,12 @@
         <div id="mpSaldoBox" style="display:none">
           <div class="mp-saldo-label">Dinero disponible</div>
           <div class="mp-saldo" id="mpSaldo">$0,00</div>
-          <div class="mp-actions" id="mpActions">
-            <button onclick="irATransferir()"><span class="ico">📤</span>Transferir</button>
-            <button onclick="irADinero()"><span class="ico">💰</span>Mi dinero</button>
+          <div class="mp-actions">
+            <button onclick="irATransferir()"><span class="ico">📤</span>Enviar</button>
+            <button onclick="irADinero()"><span class="ico">💰</span>Dinero</button>
             <button onclick="irADolar()"><span class="ico">💵</span>Dólar</button>
-            <button onclick="irAPrestamos()"><span class="ico">💳</span>Préstamos</button>
+            <button onclick="irAPrestamos()"><span class="ico">💳</span>Créditos</button>
+            <button onclick="irAPlazoFijo()"><span class="ico">🏦</span>Inversiones</button>
             <button onclick="cargarSaldo()"><span class="ico">➕</span>Cargar</button>
           </div>
         </div>
@@ -187,7 +180,6 @@
         <span></span><span></span><span></span><span></span>
       </div>
 
-      <!-- ONBOARDING -->
       <div class="pantalla activa form-app" id="p1">
         <h3>Crear cuenta</h3>
         <label>Email</label><input type="email" id="email" placeholder="juan@escuela.edu">
@@ -204,7 +196,7 @@
       </div>
       <div class="pantalla form-app" id="p3">
         <h3>Tus datos personales</h3>
-        <p style="font-size:.72rem;color:#666;margin-top:4px">DNIs de prueba: <b>12345678</b> (Juan), <b>87654321</b> (María), <b>22222222</b> (Ana)</p>
+        <p style="font-size:.72rem;color:#666;margin-top:4px">DNIs: <b>12345678</b> (Juan), <b>87654321</b> (María), <b>22222222</b> (Ana)</p>
         <label>Nombre</label><input type="text" id="nombre" placeholder="Juan">
         <label>Apellido</label><input type="text" id="apellido" placeholder="Pérez">
         <label>DNI</label><input type="text" id="dni" inputmode="numeric" placeholder="12345678">
@@ -237,56 +229,35 @@
         <div id="msg7"></div>
       </div>
 
-      <!-- DASHBOARD -->
       <div class="pantalla" id="p9">
         <div class="mp-content">
-          <div class="mp-card">
-            <h4>Últimos movimientos</h4>
-            <div id="ultimosMovs"><div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos todavía</div></div>
+          <div class="mp-card"><h4>Últimos movimientos</h4>
+            <div id="ultimosMovs"><div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos</div></div>
           </div>
           <div class="mp-card">
             <h4>Tus cuentas</h4>
-            <div class="mp-row" onclick="irADinero()" style="cursor:pointer">
-              <div class="left"><span class="avatar">$</span> Pesos argentinos</div>
-              <div class="right" id="saldoArsDash">$0</div>
-            </div>
-            <div class="mp-row" onclick="irADolar()" style="cursor:pointer">
-              <div class="left"><span class="avatar" style="background:#00a650">U$</span> Dólares (MEP)</div>
-              <div class="right" id="saldoUsdDash">US$ 0</div>
-            </div>
-            <div class="mp-row" onclick="irAMiQR()" style="cursor:pointer">
-              <div class="left"><span class="avatar" style="background:#7c3aed">📲</span> Mi código QR</div>
-              <div class="right" style="font-size:.75rem;color:#888">Mostrar →</div>
-            </div>
-            <div class="mp-row" onclick="irAPrestamos()" style="cursor:pointer">
-              <div class="left"><span class="avatar" style="background:#00a650">💳</span> Préstamos y créditos</div>
-              <div class="right" style="font-size:.75rem;color:#888">Ir →</div>
-            </div>
-            <div class="mp-row" onclick="irAPlazoFijo()" style="cursor:pointer">
-              <div class="left"><span class="avatar" style="background:#f59e0b">🏦</span> Plazo fijo</div>
-              <div class="right" style="font-size:.75rem;color:#888">Ir →</div>
-            </div>
+            <div class="mp-row" onclick="irADinero()" style="cursor:pointer"><div class="left"><span class="avatar">$</span> Pesos argentinos</div><div class="right" id="saldoArsDash">$0</div></div>
+            <div class="mp-row" onclick="irADolar()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#00a650">U$</span> Dólares (MEP)</div><div class="right" id="saldoUsdDash">US$ 0</div></div>
+            <div class="mp-row" onclick="irAMiQR()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#7c3aed">📲</span> Mi código QR</div><div class="right" style="font-size:.75rem;color:#888">Mostrar →</div></div>
+            <div class="mp-row" onclick="irAPrestamos()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#00a650">💳</span> Préstamos y créditos</div><div class="right" style="font-size:.75rem;color:#888">Ir →</div></div>
+            <div class="mp-row" onclick="irAPlazoFijo()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#f59e0b">🏦</span> Plazo fijo</div><div class="right" style="font-size:.75rem;color:#888">Ir →</div></div>
           </div>
         </div>
       </div>
 
-      <!-- MI DINERO -->
       <div class="pantalla" id="p14">
         <div class="mp-content">
-          <div class="mp-card">
-            <h4>Pesos argentinos</h4>
+          <div class="mp-card"><h4>Pesos argentinos</h4>
             <div style="font-size:1.6rem;font-weight:700;color:#111" id="saldoArsBig">$0,00</div>
             <button class="btn-mp green" onclick="cargarSaldo()" style="margin-top:10px">➕ Cargar $10.000 (prueba)</button>
           </div>
-          <div class="mp-card">
-            <h4>Dólares (MEP)</h4>
+          <div class="mp-card"><h4>Dólares (MEP)</h4>
             <div style="font-size:1.6rem;font-weight:700;color:#00a650" id="saldoUsdBig">US$ 0</div>
             <button class="btn-mp" onclick="irADolar()" style="margin-top:10px">💵 Comprar / Vender dólares</button>
           </div>
         </div>
       </div>
 
-      <!-- DÓLAR -->
       <div class="pantalla form-app" id="p15">
         <h3>💵 Dólar MEP</h3>
         <div class="cot-card">
@@ -298,8 +269,7 @@
         </div>
         <div class="tope-bar">
           <div style="display:flex;justify-content:space-between">
-            <span><b>Tope mensual de compra</b></span>
-            <span id="topeTexto">US$ 0 / 1000</span>
+            <span><b>Tope mensual de compra</b></span><span id="topeTexto">US$ 0 / 1000</span>
           </div>
           <div class="tope-progress"><div class="fill" id="topeFill" style="width:0%"></div></div>
           <div id="topeInfo" style="font-size:.68rem">Cargando...</div>
@@ -324,10 +294,8 @@
         <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
       </div>
 
-      <!-- MI QR -->
       <div class="pantalla form-app" id="p16">
         <h3>📲 Mi código QR</h3>
-        <p style="font-size:.75rem;color:#666;margin-bottom:10px">Mostralo para que te transfieran.</p>
         <div class="qr-box">
           <div id="qrContainer"></div>
           <div style="margin-top:10px;font-size:.8rem;color:#111">
@@ -338,7 +306,6 @@
         <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
       </div>
 
-      <!-- ESCANEAR QR -->
       <div class="pantalla form-app" id="p17">
         <h3>📷 Escanear QR</h3>
         <div id="qrReader"></div>
@@ -346,42 +313,34 @@
         <button class="btn-mp gray" onclick="detenerEscaner(); irATransferir()">← Volver</button>
       </div>
 
-      <!-- SERVICIOS -->
       <div class="pantalla" id="p18">
         <div class="mp-content">
           <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <h4 style="margin:0">Facturas pendientes</h4>
-              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPendientes">Cargando...</div>
-            </div>
+            <div><h4 style="margin:0">Facturas pendientes</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPendientes">Cargando...</div></div>
             <button style="padding:8px 12px;background:#009ee3;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="generarFacturasDemo()">🎲 Generar</button>
           </div>
           <div id="listaFacturas"></div>
         </div>
       </div>
 
-      <!-- COMPROBANTE PAGO -->
       <div class="pantalla form-app" id="p19">
         <h3>✅ Pago realizado</h3>
         <div class="exito" id="comprobantePago"></div>
         <button class="btn-mp" onclick="irADashboard()">Volver al inicio</button>
       </div>
 
-      <!-- PRÉSTAMOS LISTA -->
       <div class="pantalla" id="p20">
         <div class="mp-content">
           <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <h4 style="margin:0">Mis préstamos</h4>
-              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPrestamos">Cargando...</div>
-            </div>
+            <div><h4 style="margin:0">Mis préstamos</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPrestamos">Cargando...</div></div>
             <button style="padding:8px 12px;background:#00a650;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="nuevoPrestamo()">+ Solicitar</button>
           </div>
           <div id="listaPrestamos"></div>
         </div>
       </div>
 
-      <!-- PRÉSTAMOS NUEVO -->
       <div class="pantalla form-app" id="p21">
         <h3>💳 Nuevo préstamo</h3>
         <div id="verazBox"></div>
@@ -390,7 +349,6 @@
         <button class="btn-mp gray" onclick="irAPrestamos()">← Volver</button>
       </div>
 
-      <!-- PRÉSTAMOS SIMULADOR -->
       <div class="pantalla form-app" id="p22">
         <h3 id="tituloSimulador">Simular préstamo</h3>
         <div class="info" id="infoTipo"></div>
@@ -404,7 +362,6 @@
         <div id="msgPrestamo"></div>
       </div>
 
-      <!-- CUOTAS -->
       <div class="pantalla form-app" id="p23">
         <h3>📅 Cuotas del préstamo</h3>
         <div class="info" id="infoPrestamo"></div>
@@ -414,7 +371,6 @@
         <div id="msgCuota"></div>
       </div>
 
-      <!-- COMPROBANTE PRÉSTAMO -->
       <div class="pantalla form-app" id="p24">
         <h3>🎉 Préstamo acreditado</h3>
         <div class="exito" id="comprobantePrestamo"></div>
@@ -422,30 +378,25 @@
         <button class="btn-mp gray" onclick="irADashboard()">Volver al inicio</button>
       </div>
 
-      <!-- PLAZO FIJO LISTA -->
       <div class="pantalla" id="p25">
         <div class="mp-content">
           <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <h4 style="margin:0">Mis plazos fijos</h4>
-              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPF">Cargando...</div>
-            </div>
+            <div><h4 style="margin:0">Mis plazos fijos</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPF">Cargando...</div></div>
             <button style="padding:8px 12px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="nuevoPlazoFijo()">+ Constituir</button>
           </div>
           <div id="listaPF"></div>
         </div>
       </div>
 
-      <!-- PLAZO FIJO NUEVO -->
       <div class="pantalla form-app" id="p26">
         <h3>🏦 Nuevo plazo fijo</h3>
-        <div class="info">Elegí el plazo. A mayor tiempo, mayor tasa (TNA).</div>
+        <div class="info">A mayor plazo, mayor tasa (TNA).</div>
         <p style="font-size:.72rem;color:#666;margin:10px 0 4px"><b>Elegí el tipo:</b></p>
         <div id="listaTiposPF"></div>
         <button class="btn-mp gray" onclick="irAPlazoFijo()">← Volver</button>
       </div>
 
-      <!-- PLAZO FIJO SIMULADOR -->
       <div class="pantalla form-app" id="p27">
         <h3 id="tituloSimPF">Simular plazo fijo</h3>
         <div class="info" id="infoTipoPF"></div>
@@ -457,7 +408,6 @@
         <div id="msgPF"></div>
       </div>
 
-      <!-- COMPROBANTE PF -->
       <div class="pantalla form-app" id="p28">
         <h3>🎉 Plazo fijo constituido</h3>
         <div class="exito" id="comprobantePF"></div>
@@ -465,7 +415,6 @@
         <button class="btn-mp gray" onclick="irADashboard()">Volver al inicio</button>
       </div>
 
-      <!-- TRANSFERIR -->
       <div class="pantalla form-app" id="p10">
         <h3>💸 Nueva transferencia</h3>
         <label>CVU o alias</label>
@@ -477,7 +426,6 @@
         <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
       </div>
 
-      <!-- CONFIRMAR TRANSFERENCIA -->
       <div class="pantalla form-app" id="p11">
         <h3>Confirmar transferencia</h3>
         <div class="info" id="datosDestino"></div>
@@ -488,24 +436,20 @@
         <div id="msg11"></div>
       </div>
 
-      <!-- COMPROBANTE TRANSFERENCIA -->
       <div class="pantalla form-app" id="p12">
         <h3>🎉 Transferencia realizada</h3>
         <div class="exito" id="comprobante"></div>
         <button class="btn-mp" onclick="irADashboard()">Volver al inicio</button>
       </div>
 
-      <!-- HISTORIAL -->
       <div class="pantalla" id="p13">
         <div class="mp-content">
-          <div class="mp-card">
-            <h4>Historial de movimientos</h4>
+          <div class="mp-card"><h4>Historial de movimientos</h4>
             <div id="listaHistorial" style="font-size:.8rem"></div>
           </div>
         </div>
       </div>
 
-      <!-- NAV -->
       <div class="mp-nav" id="mpNav" style="display:none">
         <div class="mp-nav-item" data-nav="p9" onclick="irADashboard()"><span class="ico">🏠</span><span>Inicio</span></div>
         <div class="mp-nav-item" data-nav="p14" onclick="irADinero()"><span class="ico">💰</span><span>Dinero</span></div>
@@ -520,9 +464,7 @@
 
   <div class="panel" id="backend">
     <h2>🖥️ Backend / Base de datos</h2>
-    <div id="log">
-      <div class="log-linea log-info">// Esperando acción del alumno...</div>
-    </div>
+    <div id="log"><div class="log-linea log-info">// Esperando acción del alumno...</div></div>
   </div>
 </div>
 
@@ -545,27 +487,27 @@ function actualizarBarraConfig(ok) {
   document.getElementById('estadoConfig').textContent = ok ? '✅ Conectado al backend' : '⚠️ Modo local (sin backend)';
 }
 async function probarConexion() {
-  if (!APPS_SCRIPT_URL) { log('Falta URL', 'err'); return; }
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'TU_URL_AQUI') { log('Falta URL', 'err'); return; }
   log('GET ?action=ping', 'req');
   try { const r = await fetch(APPS_SCRIPT_URL + '?action=ping'); log('← ' + JSON.stringify(await r.json()), 'ok'); }
   catch(e) { log('← Error: ' + e.message, 'err'); }
 }
 
-// ==================== LOG & NAV ====================
+// ==================== LOG ====================
 function log(texto, tipo='info') {
   const div = document.getElementById('log');
-  const linea = document.createElement('div');
-  linea.className = 'log-linea log-' + tipo;
-  linea.textContent = texto;
-  div.appendChild(linea); div.scrollTop = div.scrollHeight;
+  const l = document.createElement('div');
+  l.className = 'log-linea log-' + tipo;
+  l.textContent = texto;
+  div.appendChild(l); div.scrollTop = div.scrollHeight;
 }
 function mostrar(id) {
   if (typeof qrScanner !== 'undefined' && qrScanner && id !== 'p17') detenerEscaner();
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
-  const onboarding = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
-  document.getElementById('mpNav').style.display = onboarding ? 'none' : 'flex';
-  document.getElementById('mpSaldoBox').style.display = onboarding ? 'none' : 'block';
+  const onb = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
+  document.getElementById('mpNav').style.display = onb ? 'none' : 'flex';
+  document.getElementById('mpSaldoBox').style.display = onb ? 'none' : 'block';
   actualizarNav(id);
 }
 function actualizarNav(p) {
@@ -589,40 +531,40 @@ let idPrestamoActual = null;
 let tiposPF = [];
 let tipoPFSeleccionado = null;
 
-// ==================== BACKEND ====================
+// ==================== BACKEND GET ====================
 async function llamarBackend(action, params = {}) {
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'TU_URL_AQUI') { log('(Modo local: sin backend)', 'info'); return { ok:true, local:true }; }
-  const query = new URLSearchParams({ action, ...params }).toString();
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'TU_URL_AQUI') {
+    log('(Modo local)', 'info'); return { ok:true, local:true };
+  }
+  const q = new URLSearchParams({ action, ...params }).toString();
   log('GET ?action=' + action, 'req');
   try {
-    const r = await fetch(APPS_SCRIPT_URL + '?' + query);
+    const r = await fetch(APPS_SCRIPT_URL + '?' + q);
     const j = await r.json();
     log('← ' + JSON.stringify(j).substring(0, 220), j.ok ? 'ok' : 'err');
     return j;
   } catch(e) { log('← Error red: ' + e.message, 'err'); return { ok:false, error:e.message }; }
 }
- async function postBackend(action, datos = {}) {
+
+// ==================== BACKEND POST ====================
+async function postBackend(action, datos = {}) {
   if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'TU_URL_AQUI') {
-    log('(Modo local: sin backend)', 'info');
-    return { ok:true, local:true };
+    log('(Modo local)', 'info'); return { ok:true, local:true };
   }
   log('POST ?action=' + action, 'req');
   try {
     const r = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify({ action, ...datos }),
-      // ⚠️ text/plain evita el preflight CORS que bloquea Apps Script
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       redirect: 'follow'
     });
     const j = await r.json();
     log('← ' + JSON.stringify(j).substring(0, 220), j.ok ? 'ok' : 'err');
     return j;
-  } catch(e) {
-    log('← Error red: ' + e.message, 'err');
-    return { ok:false, error:e.message };
-  }
+  } catch(e) { log('← Error red: ' + e.message, 'err'); return { ok:false, error:e.message }; }
 }
+
 // ==================== PASO 1 ====================
 async function paso1() {
   const email = document.getElementById('email').value.trim();
@@ -633,8 +575,8 @@ async function paso1() {
   log('→ Email ✅');
   if (tel.replace(/\D/g,'').length < 10) { log('→ Teléfono inválido ❌', 'err'); msg.innerHTML = '<div class="error">Teléfono inválido.</div>'; return; }
   log('→ Teléfono ✅');
-  const check = await llamarBackend('checkEmail', { email });
-  if (check && check.existe) { log('→ Ya registrado ❌', 'err'); msg.innerHTML = '<div class="error">Ya existe una cuenta con ese email.</div>'; return; }
+  const c = await llamarBackend('checkEmail', { email });
+  if (c && c.existe) { log('→ Ya registrado ❌', 'err'); msg.innerHTML = '<div class="error">Ya existe una cuenta con ese email.</div>'; return; }
   sesion.userId = 'usr_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   sesion.otp = String(Math.floor(100000 + Math.random() * 900000));
   sesion.email = email; sesion.telefono = tel;
@@ -645,31 +587,37 @@ async function paso1() {
   msg.innerHTML = '<div class="exito">Registro iniciado. Mirá el SMS 👉</div>';
   progreso(1); setTimeout(() => mostrar('p2'), 700);
 }
+
+// ==================== PASO 2 ====================
 function paso2() {
-  const codigo = document.getElementById('otp').value.trim();
+  const cod = document.getElementById('otp').value.trim();
   const msg = document.getElementById('msg2'); msg.innerHTML = '';
   log('POST /api/otp/verificar', 'req');
-  if (codigo !== sesion.otp) { log('→ OTP incorrecto ❌', 'err'); msg.innerHTML = '<div class="error">Código incorrecto.</div>'; return; }
+  if (cod !== sesion.otp) { log('→ OTP incorrecto ❌', 'err'); msg.innerHTML = '<div class="error">Código incorrecto.</div>'; return; }
   log('→ OTP ✅');
   msg.innerHTML = '<div class="exito">¡Verificado!</div>';
   progreso(2); setTimeout(() => mostrar('p3'), 700);
 }
+
+// ==================== PASO 3 ====================
 async function paso3() {
-  const nombre = document.getElementById('nombre').value.trim().toUpperCase();
-  const apellido = document.getElementById('apellido').value.trim().toUpperCase();
+  const nom = document.getElementById('nombre').value.trim().toUpperCase();
+  const ape = document.getElementById('apellido').value.trim().toUpperCase();
   const dni = document.getElementById('dni').value.trim();
   const msg = document.getElementById('msg3'); msg.innerHTML = '';
   log('POST /api/renaper', 'req');
   if (!/^\d{7,8}$/.test(dni)) { log('→ DNI inválido ❌', 'err'); msg.innerHTML = '<div class="error">DNI: 7 u 8 dígitos.</div>'; return; }
   const r = await llamarBackend('renaper', { dni });
   if (r && r.ok && r.persona) {
-    if (r.persona.nombre !== nombre || r.persona.apellido !== apellido) { log('→ No coinciden ❌', 'err'); msg.innerHTML = '<div class="error">Los datos no coinciden con RENAPER.</div>'; return; }
+    if (r.persona.nombre !== nom || r.persona.apellido !== ape) { log('→ No coinciden ❌', 'err'); msg.innerHTML = '<div class="error">Los datos no coinciden con RENAPER.</div>'; return; }
   } else if (r && !r.local) { log('← DNI no encontrado', 'err'); msg.innerHTML = '<div class="error">DNI no encontrado en RENAPER.</div>'; return; }
   log('→ Validado ✅');
-  sesion.nombre = nombre; sesion.apellido = apellido; sesion.dni = dni;
+  sesion.nombre = nom; sesion.apellido = ape; sesion.dni = dni;
   msg.innerHTML = '<div class="exito">Validado con RENAPER.</div>';
   progreso(3); setTimeout(() => mostrar('p4'), 700);
 }
+
+// ==================== PASO 4 ====================
 async function iniciarCamara() {
   const box = document.getElementById('camaraBox');
   try {
@@ -697,68 +645,41 @@ async function iniciarCamara() {
 async function capturarSelfie() {
   const msg = document.getElementById('msg4'); msg.innerHTML = '';
   log('📸 Capturando selfie...');
-
-  // 1) Obtener la imagen del video (o usar la simulada)
   if (!sesion.selfieBase64) {
     const v = document.querySelector('#camaraBox video');
-    if (v) {
-      const c = document.createElement('canvas');
-      c.width = 320; c.height = 320;
-      c.getContext('2d').drawImage(v, 0, 0, 320, 320);
-      sesion.selfieBase64 = c.toDataURL('image/jpeg', 0.7);
-    }
+    if (v) { const c = document.createElement('canvas'); c.width = c.height = 320; c.getContext('2d').drawImage(v,0,0,320,320); sesion.selfieBase64 = c.toDataURL('image/jpeg', .7); }
   }
   if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-
-  if (!sesion.selfieBase64) {
-    msg.innerHTML = '<div class="error">No se pudo capturar la imagen.</div>';
-    return;
-  }
-  log('  Tamaño base64: ' + sesion.selfieBase64.length + ' caracteres', 'info');
-
-  // 2) Prueba de vida + facematch (simulados)
-  log('→ Ejecutando prueba de vida (liveness)...');
+  if (!sesion.selfieBase64) { msg.innerHTML = '<div class="error">No se pudo capturar.</div>'; return; }
+  log('  Tamaño base64: ' + sesion.selfieBase64.length + ' chars', 'info');
+  log('→ Prueba de vida...');
   const score = 85 + Math.floor(Math.random() * 14);
-  log(`  Score facial: ${score}/100`, 'ok');
-  log('→ Comparando con foto del DNI...');
-
-  // 3) Enviar al backend por POST (con base64 COMPLETO)
+  log(`  Score: ${score}/100`, 'ok');
   const r = await postBackend('guardarSelfie', {
-    userId: sesion.userId,
-    dni: sesion.dni,
-    base64: sesion.selfieBase64,     // ← SIN substring, va completo
-    score: score
+    userId: sesion.userId, dni: sesion.dni, base64: sesion.selfieBase64, score
   });
-
-  if (!r.ok) {
-    log('← Error: ' + (r.error || 'desconocido'), 'err');
-    msg.innerHTML = `<div class="error">No se pudo guardar la selfie: ${r.error || ''}<br><span style="font-size:.7rem">Revisá los permisos de Drive.</span></div>`;
-    return;
-  }
-
-  if (r.url) {
-    log('  📎 Selfie guardada en Drive: ' + r.url, 'ok');
-    log('  📦 Tamaño: ' + (r.tamaño ? Math.round(r.tamaño/1024) + ' KB' : 'OK'), 'info');
-  }
-  log('← 200 OK', 'ok');
-  msg.innerHTML = `<div class="exito">✅ Identidad verificada (score ${score}/100).<br>
-    <span style="font-size:.7rem">Selfie guardada en Drive</span></div>`;
-  progreso(4);
-  setTimeout(() => mostrar('p5'), 1000);
+  if (!r.ok) { log('← ' + (r.error || 'error'), 'err'); msg.innerHTML = `<div class="error">No se pudo guardar la selfie: ${r.error || ''}</div>`; return; }
+  if (r.url) log('  📎 Guardada: ' + r.url, 'ok');
+  msg.innerHTML = `<div class="exito">✅ Identidad verificada (${score}/100)</div>`;
+  progreso(4); setTimeout(() => mostrar('p5'), 900);
 }
+
+// ==================== PASO 5 ====================
 async function paso5() {
   const msg = document.getElementById('msg5'); msg.innerHTML = '';
   log('POST /api/seguridad', 'req');
   const r = await llamarBackend('verificarSeguridad', { nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni });
   if (r && r.enLista) {
-    const txt = r.tipo === 'SANCION' ? 'Tu cuenta no puede ser abierta por normativa internacional.' : 'Tu solicitud será revisada por un analista. Te contactaremos en 48 hs.';
+    const t = r.tipo === 'SANCION' ? 'Tu cuenta no puede ser abierta por normativa internacional.' : 'Tu solicitud será revisada manualmente.';
     log('  ⚠️ COINCIDENCIA', 'err');
-    msg.innerHTML = `<div class="error">${txt}</div>`; return;
+    msg.innerHTML = `<div class="error">${t}</div>`; return;
   }
   log('→ Sin coincidencias ✅');
   msg.innerHTML = '<div class="exito">Sin coincidencias en listas de riesgo.</div>';
   progreso(5); setTimeout(() => mostrar('p6'), 900);
 }
+
+// ==================== PASO 6 ====================
 async function paso6() {
   const pin = document.getElementById('pin').value.trim();
   const msg = document.getElementById('msg6'); msg.innerHTML = '';
@@ -778,6 +699,8 @@ async function sha256(s) {
   const h = await crypto.subtle.digest('SHA-256', b);
   return Array.from(new Uint8Array(h)).map(x => x.toString(16).padStart(2,'0')).join('');
 }
+
+// ==================== PASO 7 ====================
 async function generarCuenta() {
   const dni = sesion.dni;
   const b1 = '00000001', b2 = dni.padStart(8,'0') + '000001';
@@ -815,31 +738,28 @@ async function actualizarSaldos() {
   const r = await llamarBackend('obtenerSaldos', { userId: sesion.userId });
   const s = r && r.saldos ? r.saldos : { ars:0, usd:0 };
   sesion.saldos = s;
-  const fmtArs = '$' + Number(s.ars).toLocaleString('es-AR', { minimumFractionDigits:2 });
-  const fmtUsd = 'US$ ' + Number(s.usd).toLocaleString('es-AR', { minimumFractionDigits:2 });
-  document.getElementById('mpSaldo').textContent = fmtArs;
-  document.getElementById('saldoArsDash').textContent = fmtArs;
-  document.getElementById('saldoUsdDash').textContent = fmtUsd;
-  document.getElementById('saldoArsBig').textContent = fmtArs;
-  document.getElementById('saldoUsdBig').textContent = fmtUsd;
+  const fmtA = '$' + Number(s.ars).toLocaleString('es-AR', { minimumFractionDigits:2 });
+  const fmtU = 'US$ ' + Number(s.usd).toLocaleString('es-AR', { minimumFractionDigits:2 });
+  document.getElementById('mpSaldo').textContent = fmtA;
+  document.getElementById('saldoArsDash').textContent = fmtA;
+  document.getElementById('saldoUsdDash').textContent = fmtU;
+  document.getElementById('saldoArsBig').textContent = fmtA;
+  document.getElementById('saldoUsdBig').textContent = fmtU;
   await cargarUltimosMovs();
 }
 async function cargarUltimosMovs() {
   const r = await llamarBackend('obtenerHistorialCompleto', { userId: sesion.userId });
   const cont = document.getElementById('ultimosMovs');
   if (!r.ok || !r.movimientos || r.movimientos.length === 0) {
-    cont.innerHTML = '<div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos todavía</div>';
+    cont.innerHTML = '<div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos</div>';
     return;
   }
   cont.innerHTML = r.movimientos.slice(0,4).map(m => {
     const pos = m.monto >= 0;
     return `<div class="mp-row">
       <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${m.icono||(pos?'↓':'↑')}</span>
-        <div style="font-size:.78rem">
-          <div style="font-weight:600">${m.tipo}</div>
-          <div style="color:#888;font-size:.68rem">${m.contraparte}</div>
-        </div>
-      </div>
+        <div style="font-size:.78rem"><div style="font-weight:600">${m.tipo}</div>
+        <div style="color:#888;font-size:.68rem">${m.contraparte}</div></div></div>
       <div class="right ${pos?'pos':'neg'}">${pos?'+':''}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
     </div>`;
   }).join('');
@@ -847,7 +767,7 @@ async function cargarUltimosMovs() {
 async function irADinero() { mostrar('p14'); await actualizarSaldos(); }
 async function cargarSaldo() {
   log('POST /api/ledger/cargarPrueba', 'req');
-  const r = await llamarBackend('cargarSaldoPrueba', { userId: sesion.userId, monto: 10000 });
+  const r = await postBackend('cargarSaldoPrueba', { userId: sesion.userId, monto: 10000 });
   if (r.ok) { log('← +$10.000', 'ok'); await actualizarSaldos(); }
 }
 
@@ -877,7 +797,7 @@ async function confirmarTransferencia() {
   log('POST /api/transferencia/ejecutar', 'req');
   if (!monto || monto <= 0) { msg.innerHTML = '<div class="error">Monto > 0.</div>'; return; }
   if (monto > sesion.saldos.ars) { log('→ Saldo insuficiente ❌', 'err'); msg.innerHTML = `<div class="error">Saldo insuficiente. Tenés $${sesion.saldos.ars.toLocaleString('es-AR')}.</div>`; return; }
-  const r = await llamarBackend('realizarTransferencia', { origenUserId: sesion.userId, destinoCvu: sesion.destino.cvu, monto, concepto });
+  const r = await postBackend('realizarTransferencia', { origenUserId: sesion.userId, destinoCvu: sesion.destino.cvu, monto, concepto });
   if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   const c = r.comprobante;
   document.getElementById('comprobante').innerHTML = `
@@ -888,23 +808,18 @@ async function confirmarTransferencia() {
     <strong>Concepto:</strong> ${c.concepto}<br>
     <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR', {minimumFractionDigits:2})}`;
   mostrar('p12');
+  await actualizarSaldos();
 }
 async function verHistorial() {
   const r = await llamarBackend('obtenerHistorialCompleto', { userId: sesion.userId });
   const cont = document.getElementById('listaHistorial');
-  if (!r.ok || !r.movimientos || r.movimientos.length === 0) {
-    cont.innerHTML = '<div class="info">Sin movimientos.</div>';
-    mostrar('p13'); return;
-  }
+  if (!r.ok || !r.movimientos || r.movimientos.length === 0) { cont.innerHTML = '<div class="info">Sin movimientos.</div>'; mostrar('p13'); return; }
   cont.innerHTML = r.movimientos.map(m => {
     const pos = m.monto >= 0;
     return `<div class="mp-row">
       <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${m.icono||(pos?'↓':'↑')}</span>
-        <div style="font-size:.75rem">
-          <div style="font-weight:600">${m.tipo}</div>
-          <div style="color:#888;font-size:.65rem">${m.contraparte} · ${new Date(m.fecha).toLocaleDateString('es-AR')}</div>
-        </div>
-      </div>
+        <div style="font-size:.75rem"><div style="font-weight:600">${m.tipo}</div>
+        <div style="color:#888;font-size:.65rem">${m.contraparte} · ${new Date(m.fecha).toLocaleDateString('es-AR')}</div></div></div>
       <div class="right ${pos?'pos':'neg'}">${pos?'+':''}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
     </div>`;
   }).join('');
@@ -930,20 +845,20 @@ async function cargarTopeMensual() {
   const r = await llamarBackend('obtenerTopeMensual', { userId: sesion.userId });
   if (!r.ok) return;
   const pct = Math.min(100, (r.consumido / r.tope) * 100);
-  const fill = document.getElementById('topeFill');
-  fill.style.width = pct + '%';
-  fill.className = 'fill' + (pct >= 100 ? ' danger' : (pct >= 70 ? ' warn' : ''));
+  const f = document.getElementById('topeFill');
+  f.style.width = pct + '%';
+  f.className = 'fill' + (pct >= 100 ? ' danger' : (pct >= 70 ? ' warn' : ''));
   document.getElementById('topeTexto').textContent = 'US$ ' + r.consumido.toLocaleString('es-AR') + ' / ' + r.tope;
   document.getElementById('topeInfo').innerHTML = r.disponible > 0
     ? `Te quedan <b>US$ ${r.disponible.toLocaleString('es-AR')}</b> este mes.`
     : '🚫 Alcanzaste el tope mensual.';
 }
-function setModoDolar(modo) {
-  modoDolar = modo;
-  document.getElementById('tabCompra').classList.toggle('active', modo === 'compra');
-  document.getElementById('tabVenta').classList.toggle('active', modo === 'venta');
-  document.getElementById('dolarCompraForm').style.display = modo === 'compra' ? 'block' : 'none';
-  document.getElementById('dolarVentaForm').style.display = modo === 'venta' ? 'block' : 'none';
+function setModoDolar(m) {
+  modoDolar = m;
+  document.getElementById('tabCompra').classList.toggle('active', m === 'compra');
+  document.getElementById('tabVenta').classList.toggle('active', m === 'venta');
+  document.getElementById('dolarCompraForm').style.display = m === 'compra' ? 'block' : 'none';
+  document.getElementById('dolarVentaForm').style.display = m === 'venta' ? 'block' : 'none';
 }
 function calcCompra() {
   const usd = Number(document.getElementById('usdCompra').value) || 0;
@@ -960,7 +875,7 @@ async function confirmarCompraDolar() {
   const msg = document.getElementById('msgDolar'); msg.innerHTML = '';
   log('POST /api/dolar/comprar', 'req');
   if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Monto inválido.</div>'; return; }
-  const r = await llamarBackend('comprarDolares', { userId: sesion.userId, montoUsd: usd });
+  const r = await postBackend('comprarDolares', { userId: sesion.userId, montoUsd: usd });
   if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   const t = r.topeMensual;
   msg.innerHTML = `<div class="exito">✅ Compra confirmada<br>Compraste <b>US$ ${r.montoUsd}</b> por <b>$${r.montoArs.toLocaleString('es-AR')}</b><br>
@@ -973,7 +888,7 @@ async function confirmarVentaDolar() {
   const msg = document.getElementById('msgDolar'); msg.innerHTML = '';
   log('POST /api/dolar/vender', 'req');
   if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Monto inválido.</div>'; return; }
-  const r = await llamarBackend('venderDolares', { userId: sesion.userId, montoUsd: usd });
+  const r = await postBackend('venderDolares', { userId: sesion.userId, montoUsd: usd });
   if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   msg.innerHTML = `<div class="exito">✅ Venta confirmada<br>Vendiste <b>US$ ${r.montoUsd}</b> y recibiste <b>$${r.montoArs.toLocaleString('es-AR')}</b></div>`;
   document.getElementById('usdVenta').value = '';
@@ -1030,31 +945,29 @@ async function irAServicios() { mostrar('p18'); await cargarFacturas(); }
 async function cargarFacturas() {
   const r = await llamarBackend('obtenerFacturasPendientes', { userId: sesion.userId });
   const cont = document.getElementById('listaFacturas');
-  const totalEl = document.getElementById('totalPendientes');
+  const t = document.getElementById('totalPendientes');
   if (!r.ok || !r.facturas || r.facturas.length === 0) {
-    totalEl.textContent = 'Sin facturas pendientes';
+    t.textContent = 'Sin facturas pendientes';
     cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
       <div style="font-size:2.5rem">🧾</div>
-      <div style="color:#666;font-size:.85rem;margin-top:8px">No tenés facturas pendientes.<br>
+      <div style="color:#666;font-size:.85rem;margin-top:8px">No tenés facturas.<br>
       <span style="font-size:.75rem">Tocá "Generar" para simular</span></div></div>`;
     return;
   }
-  const total = r.facturas.reduce((s, f) => s + f.monto, 0);
-  totalEl.textContent = `${r.facturas.length} facturas · Total $${total.toLocaleString('es-AR')}`;
+  const tot = r.facturas.reduce((s, f) => s + f.monto, 0);
+  t.textContent = `${r.facturas.length} facturas · Total $${tot.toLocaleString('es-AR')}`;
   cont.innerHTML = r.facturas.map(f => {
     const venc = new Date(f.vencimiento).toLocaleDateString('es-AR');
     const vencido = new Date(f.vencimiento) < new Date();
     return `<div class="factura-card">
       <div class="logo">${f.logo}</div>
-      <div class="info">
-        <div class="emp">${f.empresa}</div>
+      <div class="info"><div class="emp">${f.empresa}</div>
         <div class="det">${f.categoria} · ${f.periodo}</div>
         <div class="det" style="color:${vencido ? '#dc2626' : '#888'}">Vence: ${venc}${vencido ? ' ⚠️' : ''}</div>
       </div>
       <div class="monto">$${f.monto.toLocaleString('es-AR')}
         <button onclick="confirmarPago('${f.id}','${f.empresa}',${f.monto})">Pagar</button>
-      </div>
-    </div>`;
+      </div></div>`;
   }).join('');
 }
 async function generarFacturasDemo() {
@@ -1063,7 +976,7 @@ async function generarFacturasDemo() {
 }
 async function confirmarPago(id, empresa, monto) {
   if (!confirm(`¿Pagar $${monto.toLocaleString('es-AR')} a ${empresa}?`)) return;
-  const r = await llamarBackend('pagarFactura', { userId: sesion.userId, facturaId: id });
+  const r = await postBackend('pagarFactura', { userId: sesion.userId, facturaId: id });
   if (!r.ok) { alert(r.error); return; }
   const c = r.comprobante;
   document.getElementById('comprobantePago').innerHTML = `
@@ -1081,27 +994,26 @@ async function irAPrestamos() { mostrar('p20'); await cargarPrestamos(); }
 async function cargarPrestamos() {
   const r = await llamarBackend('listarPrestamos', { userId: sesion.userId });
   const cont = document.getElementById('listaPrestamos');
-  const totalEl = document.getElementById('totalPrestamos');
+  const t = document.getElementById('totalPrestamos');
   if (!r.ok || !r.prestamos || r.prestamos.length === 0) {
-    totalEl.textContent = 'Sin préstamos';
+    t.textContent = 'Sin préstamos';
     cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
       <div style="font-size:2.5rem">💳</div>
       <div style="color:#666;font-size:.85rem;margin-top:8px">Sin préstamos activos.<br>
       <span style="font-size:.75rem">Tocá "+ Solicitar"</span></div></div>`;
     return;
   }
-  const activos = r.prestamos.filter(p => p.estado === 'ACTIVO').length;
-  totalEl.textContent = `${r.prestamos.length} en total · ${activos} activos`;
+  const act = r.prestamos.filter(p => p.estado === 'ACTIVO').length;
+  t.textContent = `${r.prestamos.length} en total · ${act} activos`;
   cont.innerHTML = r.prestamos.map(p => {
-    const fecha = new Date(p.fecha).toLocaleDateString('es-AR');
-    return `<div class="prestamo-item" onclick="verCuotas('${p.id}')" style="cursor:pointer">
+    const fe = new Date(p.fecha).toLocaleDateString('es-AR');
+    return `<div class="item-card" onclick="verCuotas('${p.id}')" style="cursor:pointer">
       <div class="head"><div class="tipo">${p.tipoNombre}</div>
       <div class="estado ${p.estado}">${p.estado}</div></div>
       <div class="info">Monto: <b>$${p.monto.toLocaleString('es-AR')}</b> · TNA: <b>${p.tna}%</b> · ${p.meses} cuotas de <b>$${p.cuota.toLocaleString('es-AR')}</b></div>
       <div class="info">Total: <b>$${p.total.toLocaleString('es-AR')}</b> · Interés: <b>$${p.interes.toLocaleString('es-AR')}</b></div>
-      <div class="info" style="color:#888;font-size:.68rem">${fecha} · Pagadas: ${p.cuotasPagadas}/${p.meses}
-        <span style="float:right;color:#009ee3;font-weight:600">Ver cuotas →</span></div>
-    </div>`;
+      <div class="info" style="color:#888;font-size:.68rem">${fe} · Pagadas: ${p.pagadas}/${p.meses}
+        <span style="float:right;color:#009ee3;font-weight:600">Ver cuotas →</span></div></div>`;
   }).join('');
 }
 async function nuevoPrestamo() {
@@ -1121,7 +1033,7 @@ async function nuevoPrestamo() {
       <div class="score-bar"><div class="fill" style="width:${pct}%"></div></div>
     </div>`;
   if (!verazActual.apto) {
-    document.getElementById('listaTipos').innerHTML = `<div class="error">🚫 Tu Veraz no permite solicitar préstamos.</div>`;
+    document.getElementById('listaTipos').innerHTML = `<div class="error">🚫 Tu Veraz no permite préstamos.</div>`;
     return;
   }
   const rt = await llamarBackend('listarTiposPrestamo');
@@ -1129,24 +1041,23 @@ async function nuevoPrestamo() {
   tiposPrestamo = rt.tipos;
   document.getElementById('listaTipos').innerHTML = tiposPrestamo.map(t => {
     const tna = t.tnaBase + verazActual.ajusteTasa;
-    return `<div class="tipo-prestamo" onclick="elegirTipo('${t.id}')">
+    return `<div class="tipo-item" onclick="elegirTipo('${t.id}')">
       <div class="head"><div class="nombre">${t.nombre}</div><div class="tna">${tna}% TNA</div></div>
       <div class="desc">${t.descripcion}</div>
       <div class="rango">Monto: $${t.montoMin.toLocaleString('es-AR')} a $${t.montoMax.toLocaleString('es-AR')}<br>Plazos: ${t.plazos.join(', ')} meses</div>
     </div>`;
   }).join('');
 }
-function elegirTipo(tipoId) {
-  tipoSeleccionado = tiposPrestamo.find(t => t.id === tipoId);
+function elegirTipo(id) {
+  tipoSeleccionado = tiposPrestamo.find(t => t.id === id);
   mostrar('p22');
   document.getElementById('tituloSimulador').textContent = '💳 ' + tipoSeleccionado.nombre;
   const tna = tipoSeleccionado.tnaBase + verazActual.ajusteTasa;
   document.getElementById('infoTipo').innerHTML = `<b>${tipoSeleccionado.nombre}</b><br>${tipoSeleccionado.descripcion}<br>
     TNA base: <b>${tipoSeleccionado.tnaBase}%</b> · Ajuste: <b>${verazActual.ajusteTasa >= 0 ? '+' : ''}${verazActual.ajusteTasa}%</b> · TNA final: <b style="color:#00a650">${tna}%</b>`;
-  const sel = document.getElementById('plazoPrestamo');
-  sel.innerHTML = tipoSeleccionado.plazos.map(p => `<option value="${p}">${p} meses</option>`).join('');
-  const sugerido = Math.min(tipoSeleccionado.montoMax, verazActual.montoMaximo, 100000);
-  document.getElementById('montoPrestamo').value = Math.max(sugerido, tipoSeleccionado.montoMin);
+  document.getElementById('plazoPrestamo').innerHTML = tipoSeleccionado.plazos.map(p => `<option value="${p}">${p} meses</option>`).join('');
+  const sug = Math.min(tipoSeleccionado.montoMax, verazActual.montoMaximo, 100000);
+  document.getElementById('montoPrestamo').value = Math.max(sug, tipoSeleccionado.montoMin);
   actualizarSimulacion();
 }
 async function actualizarSimulacion() {
@@ -1158,7 +1069,7 @@ async function actualizarSimulacion() {
   const r = await llamarBackend('simularPrestamo', { userId: sesion.userId, tipoId: tipoSeleccionado.id, monto, meses });
   if (!r.ok) { cont.innerHTML = `<div class="error">${r.error}</div>`; btn.style.display = 'none'; return; }
   const s = r.simulacion;
-  cont.innerHTML = `<div class="simulador-box">
+  cont.innerHTML = `<div class="sim-box">
     <div class="fila"><span class="lbl">Monto</span><span class="val">$${s.monto.toLocaleString('es-AR')}</span></div>
     <div class="fila"><span class="lbl">Plazo</span><span class="val">${s.meses} meses</span></div>
     <div class="fila"><span class="lbl">TNA base</span><span class="val">${s.tnaBase}%</span></div>
@@ -1176,58 +1087,44 @@ async function confirmarSolicitudPrestamo() {
   const msg = document.getElementById('msgPrestamo'); msg.innerHTML = '';
   if (!confirm(`¿Solicitar $${monto.toLocaleString('es-AR')} en ${meses} cuotas?`)) return;
   log('POST /api/prestamos/solicitar', 'req');
-  const r = await llamarBackend('solicitarPrestamo', { userId: sesion.userId, tipoId: tipoSeleccionado.id, monto, meses });
+  const r = await postBackend('solicitarPrestamo', { userId: sesion.userId, tipoId: tipoSeleccionado.id, monto, meses });
   if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
-  log('← 200 OK id=' + r.idOperacion, 'ok');
   const c = r.comprobante;
   document.getElementById('comprobantePrestamo').innerHTML = `
     <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Préstamo acreditado</div>
     <div style="font-weight:700">${r.idOperacion}</div></div>
-    <strong>Tipo:</strong> ${c.tipoNombre}<br>
-    <strong>Monto:</strong> $${c.monto.toLocaleString('es-AR')}<br>
-    <strong>Plazo:</strong> ${c.meses} cuotas<br>
-    <strong>TNA:</strong> ${c.tnaFinal}%<br>
+    <strong>Tipo:</strong> ${c.tipoNombre}<br><strong>Monto:</strong> $${c.monto.toLocaleString('es-AR')}<br>
+    <strong>Plazo:</strong> ${c.meses} cuotas<br><strong>TNA:</strong> ${c.tnaFinal}%<br>
     <strong>Cuota:</strong> $${c.cuota.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
     <strong>Total:</strong> $${c.total.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
-    <strong>Interés:</strong> $${c.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
     <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR',{minimumFractionDigits:2})}`;
   mostrar('p24');
   await actualizarSaldos();
 }
-async function verCuotas(idPrestamo) {
-  idPrestamoActual = idPrestamo;
+async function verCuotas(idP) {
+  idPrestamoActual = idP;
   mostrar('p23');
   document.getElementById('msgCuota').innerHTML = '';
-  const r = await llamarBackend('listarCuotas', { idPrestamo });
+  const r = await llamarBackend('listarCuotas', { idPrestamo: idP });
   if (!r.ok) { alert(r.error); return; }
-  const pagadas = r.cuotas.filter(c => c.estado === 'PAGADA').length;
-  const total = r.cuotas.length;
-  const pendientes = r.cuotas.filter(c => c.estado === 'PENDIENTE');
-  const vencidas = pendientes.filter(c => c.mora > 0);
-  const prox = pendientes[0];
-
-  document.getElementById('infoPrestamo').innerHTML =
-    `<b>${idPrestamo}</b><br>Cuotas pagadas: ${pagadas} / ${total}<br>` +
-    (vencidas.length > 0 ? `⚠️ <b style="color:#dc2626">${vencidas.length} cuota(s) con mora</b><br>` : '') +
-    (prox ? `Próxima: <b>$${prox.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> vence ${new Date(prox.vencimiento).toLocaleDateString('es-AR')}` : '🎉 <b>Préstamo cancelado</b>');
-
-  // Mostrar botón refinanciar si hay ≥1 cuota pendiente
-  document.getElementById('btnRefinanciar').style.display = pendientes.length > 0 ? 'block' : 'none';
-
+  const pag = r.cuotas.filter(c => c.estado === 'PAGADA').length;
+  const tot = r.cuotas.length;
+  const pend = r.cuotas.filter(c => c.estado === 'PENDIENTE');
+  const venc = pend.filter(c => c.mora > 0);
+  const prox = pend[0];
+  document.getElementById('infoPrestamo').innerHTML = `<b>${idP}</b><br>Cuotas pagadas: ${pag} / ${tot}<br>` +
+    (venc.length > 0 ? `⚠️ <b style="color:#dc2626">${venc.length} cuota(s) con mora</b><br>` : '') +
+    (prox ? `Próxima: <b>$${prox.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> vence ${new Date(prox.vencimiento).toLocaleDateString('es-AR')}` : '🎉 <b>Cancelado</b>');
+  document.getElementById('btnRefinanciar').style.display = pend.length > 0 ? 'block' : 'none';
   document.getElementById('listaCuotas').innerHTML = r.cuotas.map(c => {
-    const venc = new Date(c.vencimiento);
-    const vencida = venc < new Date() && c.estado === 'PENDIENTE';
-    const clase = c.estado === 'PAGADA' ? 'PAGADA' : (c.estado === 'REFINANCIADA' ? 'REFINANCIADA' : '');
-    return `<div class="cuota-mini ${clase}">
+    const v = new Date(c.vencimiento);
+    const vencida = v < new Date() && c.estado === 'PENDIENTE';
+    const cls = c.estado === 'PAGADA' ? 'PAGADA' : (c.estado === 'REFINANCIADA' ? 'REFINANCIADA' : '');
+    return `<div class="cuota-item ${cls}">
       <div style="display:flex;align-items:center;gap:8px;flex:1">
         <span class="num">${c.numero}</span>
-        <div>
-          <div style="font-weight:600">$${c.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</div>
-          <div style="font-size:.65rem;color:${vencida ? '#dc2626' : '#888'}">
-            Vence: ${venc.toLocaleDateString('es-AR')}${vencida ? ' ⚠️' : ''}
-            ${c.mora > 0 ? ` · Mora: $${c.mora.toLocaleString('es-AR')}` : ''}
-          </div>
-        </div>
+        <div><div style="font-weight:600">$${c.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</div>
+        <div style="font-size:.65rem;color:${vencida ? '#dc2626' : '#888'}">Vence: ${v.toLocaleDateString('es-AR')}${vencida ? ' ⚠️' : ''}${c.mora > 0 ? ` · Mora: $${c.mora.toLocaleString('es-AR')}` : ''}</div></div>
       </div>
       ${c.estado === 'PENDIENTE'
         ? `<button class="${c.mora > 0 ? 'btn-mora' : 'btn-pagar'}" onclick="event.stopPropagation(); pagarCuota('${c.idCuota}')">Pagar</button>`
@@ -1235,28 +1132,22 @@ async function verCuotas(idPrestamo) {
     </div>`;
   }).join('');
 }
-async function pagarCuota(idCuota) {
+async function pagarCuota(idC) {
   if (!confirm('¿Pagar esta cuota?')) return;
   const msg = document.getElementById('msgCuota'); msg.innerHTML = '';
-  log('POST /api/prestamos/pagar', 'req');
-  const r = await llamarBackend('pagarCuota', { userId: sesion.userId, idCuota });
-  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
-  const moraMsg = r.moraCobrada > 0 ? `<br><span style="color:#dc2626">Mora incluida: $${r.moraCobrada.toLocaleString('es-AR')}</span>` : '';
-  msg.innerHTML = `<div class="exito">✅ Cuota ${r.cuotaPagada} pagada. Total: $${r.totalPagado.toLocaleString('es-AR')}${moraMsg}</div>`;
+  const r = await postBackend('pagarCuota', { userId: sesion.userId, idCuota: idC });
+  if (!r.ok) { msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  const m = r.moraCobrada > 0 ? `<br><span style="color:#dc2626">Mora incluida: $${r.moraCobrada.toLocaleString('es-AR')}</span>` : '';
+  msg.innerHTML = `<div class="exito">✅ Cuota ${r.cuotaPagada} pagada. Total: $${r.totalPagado.toLocaleString('es-AR')}${m}</div>`;
   await actualizarSaldos();
   await verCuotas(idPrestamoActual);
 }
 async function refinanciarActual() {
   if (!idPrestamoActual) return;
-  const confirmar = confirm('¿Refinanciar todas las cuotas pendientes?\n\nSe generará un nuevo préstamo a 12 meses con un recargo del 15%. Tu categoría Veraz bajará 1 nivel.');
-  if (!confirmar) return;
+  if (!confirm('¿Refinanciar cuotas pendientes?\n\nSe genera un nuevo préstamo a 12 meses con 15% de recargo. Tu Veraz baja 1 nivel.')) return;
   const msg = document.getElementById('msgCuota'); msg.innerHTML = '';
-  log('POST /api/prestamos/refinanciar', 'req');
-  log('→ Calculando cuotas pendientes + mora...');
-  const r = await llamarBackend('refinanciarPrestamo', { userId: sesion.userId, idPrestamo: idPrestamoActual });
-  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
-  log(`→ Nuevo préstamo: ${r.idOperacion}`, 'ok');
-  log(`→ Veraz del usuario actualizado`, 'info');
+  const r = await postBackend('refinanciarPrestamo', { userId: sesion.userId, idPrestamo: idPrestamoActual });
+  if (!r.ok) { msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   msg.innerHTML = `<div class="exito">✅ Refinanciación exitosa<br>
     Monto original: <b>$${r.montoOriginal.toLocaleString('es-AR')}</b><br>
     Recargo (15%): <b>$${r.recargo.toLocaleString('es-AR')}</b><br>
@@ -1272,32 +1163,31 @@ async function irAPlazoFijo() { mostrar('p25'); await cargarPlazosFijos(); }
 async function cargarPlazosFijos() {
   const r = await llamarBackend('listarPlazosFijos', { userId: sesion.userId });
   const cont = document.getElementById('listaPF');
-  const totalEl = document.getElementById('totalPF');
+  const t = document.getElementById('totalPF');
   if (!r.ok || !r.plazos || r.plazos.length === 0) {
-    totalEl.textContent = 'Sin plazos fijos';
+    t.textContent = 'Sin plazos fijos';
     cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
       <div style="font-size:2.5rem">🏦</div>
       <div style="color:#666;font-size:.85rem;margin-top:8px">Sin plazos fijos activos.<br>
       <span style="font-size:.75rem">Tocá "+ Constituir"</span></div></div>`;
     return;
   }
-  const activos = r.plazos.filter(p => p.estado === 'ACTIVO' || p.estado === 'VENCIDO').length;
-  totalEl.textContent = `${r.plazos.length} en total · ${activos} activos`;
+  const act = r.plazos.filter(p => p.estado === 'ACTIVO' || p.estado === 'VENCIDO').length;
+  t.textContent = `${r.plazos.length} en total · ${act} activos`;
   cont.innerHTML = r.plazos.map(p => {
-    const fecha = new Date(p.fecha).toLocaleDateString('es-AR');
-    const venc = new Date(p.fechaVencimiento).toLocaleDateString('es-AR');
-    const botonRescate = (p.estado === 'ACTIVO' || p.estado === 'VENCIDO')
+    const fe = new Date(p.fecha).toLocaleDateString('es-AR');
+    const ve = new Date(p.fechaVencimiento).toLocaleDateString('es-AR');
+    const btn = (p.estado === 'ACTIVO' || p.estado === 'VENCIDO')
       ? `<button class="btn-mp green" style="margin-top:8px;padding:8px;font-size:.75rem" onclick="event.stopPropagation(); rescatarPF('${p.id}')">💰 ${p.estado === 'VENCIDO' ? 'Retirar (vencido)' : 'Rescatar anticipado'}</button>`
       : '';
-    return `<div class="pf-item">
+    return `<div class="item-card">
       <div class="head"><div class="tipo">${p.tipoNombre}</div>
       <div class="estado ${p.estado}">${p.estado}</div></div>
       <div class="info">Monto: <b>$${p.monto.toLocaleString('es-AR')}</b> · TNA: <b>${p.tna}%</b> · ${p.dias} días</div>
-      <div class="info">Interés: <b style="color:#00a650">+$${p.interesEstimado.toLocaleString('es-AR')}</b> · Total al vencimiento: <b>$${p.montoAlVencimiento.toLocaleString('es-AR')}</b></div>
-      <div class="info" style="color:#888;font-size:.68rem">Constituido: ${fecha} · Vence: ${venc}</div>
+      <div class="info">Interés: <b style="color:#00a650">+$${p.interesEstimado.toLocaleString('es-AR')}</b> · Total: <b>$${p.montoAlVencimiento.toLocaleString('es-AR')}</b></div>
+      <div class="info" style="color:#888;font-size:.68rem">Constituido: ${fe} · Vence: ${ve}</div>
       ${p.estado === 'RESCATADO' ? `<div class="info" style="color:#888;font-size:.68rem">Rescatado: ${new Date(p.fechaRescate).toLocaleDateString('es-AR')} por $${p.montoRescatado.toLocaleString('es-AR')}</div>` : ''}
-      ${botonRescate}
-    </div>`;
+      ${btn}</div>`;
   }).join('');
 }
 async function nuevoPlazoFijo() {
@@ -1305,23 +1195,21 @@ async function nuevoPlazoFijo() {
   const r = await llamarBackend('listarTiposPlazoFijo');
   if (!r.ok) { alert(r.error); return; }
   tiposPF = r.tipos;
-  log(`← ${tiposPF.length} tipos PF`, 'ok');
   document.getElementById('listaTiposPF').innerHTML = tiposPF.map(t =>
-    `<div class="tipo-prestamo" onclick="elegirTipoPF('${t.id}')">
+    `<div class="tipo-item" onclick="elegirTipoPF('${t.id}')">
       <div class="head"><div class="nombre">${t.nombre}</div><div class="tna">${t.tna}% TNA</div></div>
       <div class="desc">${t.descripcion}</div>
       <div class="rango">Monto: $${t.montoMin.toLocaleString('es-AR')} a $${t.montoMax.toLocaleString('es-AR')}</div>
     </div>`).join('');
 }
-function elegirTipoPF(tipoId) {
-  tipoPFSeleccionado = tiposPF.find(t => t.id === tipoId);
+function elegirTipoPF(id) {
+  tipoPFSeleccionado = tiposPF.find(t => t.id === id);
   mostrar('p27');
   document.getElementById('tituloSimPF').textContent = '🏦 ' + tipoPFSeleccionado.nombre;
-  document.getElementById('infoTipoPF').innerHTML =
-    `<b>${tipoPFSeleccionado.nombre}</b><br>${tipoPFSeleccionado.descripcion}<br>
-     Plazo: <b>${tipoPFSeleccionado.dias} días</b> · TNA: <b style="color:#00a650">${tipoPFSeleccionado.tna}%</b>`;
-  const sugerido = Math.min(tipoPFSeleccionado.montoMax, 100000);
-  document.getElementById('montoPF').value = Math.max(sugerido, tipoPFSeleccionado.montoMin);
+  document.getElementById('infoTipoPF').innerHTML = `<b>${tipoPFSeleccionado.nombre}</b><br>${tipoPFSeleccionado.descripcion}<br>
+    Plazo: <b>${tipoPFSeleccionado.dias} días</b> · TNA: <b style="color:#00a650">${tipoPFSeleccionado.tna}%</b>`;
+  const sug = Math.min(tipoPFSeleccionado.montoMax, 100000);
+  document.getElementById('montoPF').value = Math.max(sug, tipoPFSeleccionado.montoMin);
   actualizarSimPF();
 }
 async function actualizarSimPF() {
@@ -1332,8 +1220,8 @@ async function actualizarSimPF() {
   const r = await llamarBackend('simularPlazoFijo', { tipoId: tipoPFSeleccionado.id, monto });
   if (!r.ok) { cont.innerHTML = `<div class="error">${r.error}</div>`; btn.style.display = 'none'; return; }
   const s = r.simulacion;
-  cont.innerHTML = `<div class="simulador-box">
-    <div class="fila"><span class="lbl">Capital invertido</span><span class="val">$${s.monto.toLocaleString('es-AR')}</span></div>
+  cont.innerHTML = `<div class="sim-box">
+    <div class="fila"><span class="lbl">Capital</span><span class="val">$${s.monto.toLocaleString('es-AR')}</span></div>
     <div class="fila"><span class="lbl">Plazo</span><span class="val">${s.dias} días</span></div>
     <div class="fila"><span class="lbl">TNA</span><span class="val">${s.tna}%</span></div>
     <div class="fila"><span class="lbl">Interés ganado</span><span class="val" style="color:#00a650">+$${s.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
@@ -1346,20 +1234,16 @@ async function confirmarConstituirPF() {
   const monto = Number(document.getElementById('montoPF').value);
   const msg = document.getElementById('msgPF'); msg.innerHTML = '';
   if (!confirm(`¿Constituir plazo fijo de $${monto.toLocaleString('es-AR')} a ${tipoPFSeleccionado.dias} días?`)) return;
-  log('POST /api/plazofijo/constituir', 'req');
-  const r = await llamarBackend('constituirPlazoFijo', { userId: sesion.userId, tipoId: tipoPFSeleccionado.id, monto });
-  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
-  log('← 200 OK id=' + r.idOperacion, 'ok');
+  const r = await postBackend('constituirPlazoFijo', { userId: sesion.userId, tipoId: tipoPFSeleccionado.id, monto });
+  if (!r.ok) { msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   const c = r.comprobante;
   document.getElementById('comprobantePF').innerHTML = `
     <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Plazo fijo</div>
     <div style="font-weight:700">${r.idOperacion}</div></div>
-    <strong>Producto:</strong> ${c.tipoNombre}<br>
-    <strong>Capital:</strong> $${c.monto.toLocaleString('es-AR')}<br>
-    <strong>Plazo:</strong> ${c.dias} días<br>
-    <strong>TNA:</strong> ${c.tna}%<br>
+    <strong>Producto:</strong> ${c.tipoNombre}<br><strong>Capital:</strong> $${c.monto.toLocaleString('es-AR')}<br>
+    <strong>Plazo:</strong> ${c.dias} días<br><strong>TNA:</strong> ${c.tna}%<br>
     <strong>Interés estimado:</strong> $${c.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
-    <strong>Total al vencimiento:</strong> $${c.total.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Total:</strong> $${c.total.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
     <strong>Vence:</strong> ${new Date(c.fechaVencimiento).toLocaleDateString('es-AR')}<br>
     <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR',{minimumFractionDigits:2})}`;
   mostrar('p28');
@@ -1367,14 +1251,12 @@ async function confirmarConstituirPF() {
 }
 async function rescatarPF(id) {
   if (!confirm('¿Rescatar este plazo fijo?\n\nSi es antes del vencimiento, se aplica una penalidad del 50% del interés ganado.')) return;
-  log('POST /api/plazofijo/rescatar', 'req');
-  const r = await llamarBackend('rescatarPlazoFijo', { userId: sesion.userId, idPlazo: id });
+  const r = await postBackend('rescatarPlazoFijo', { userId: sesion.userId, idPlazo: id });
   if (!r.ok) { alert(r.error); return; }
-  log(`← Rescate ${r.tipoRescate}: $${r.montoFinal}`, 'ok');
   if (r.tipoRescate === 'VENCIMIENTO') {
-    alert(`✅ Rescate completo\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés ganado: +$${r.interesFinal.toLocaleString('es-AR')}\nTotal acreditado: $${r.montoFinal.toLocaleString('es-AR')}`);
+    alert(`✅ Rescate completo\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés: +$${r.interesFinal.toLocaleString('es-AR')}\nTotal: $${r.montoFinal.toLocaleString('es-AR')}`);
   } else {
-    alert(`⚠️ Rescate anticipado\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés ganado: +$${r.interesFinal.toLocaleString('es-AR')}\nPenalidad aplicada: -$${r.penalidad.toLocaleString('es-AR')}\nTotal acreditado: $${r.montoFinal.toLocaleString('es-AR')}`);
+    alert(`⚠️ Rescate anticipado\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés ganado: +$${r.interesFinal.toLocaleString('es-AR')}\nPenalidad: -$${r.penalidad.toLocaleString('es-AR')}\nTotal: $${r.montoFinal.toLocaleString('es-AR')}`);
   }
   await actualizarSaldos();
   await cargarPlazosFijos();
