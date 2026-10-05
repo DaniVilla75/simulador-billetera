@@ -4,224 +4,149 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi Billetera · Simulador</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 12px;
-  }
-  h1 { font-size: 0.95rem; text-align: center; margin-bottom: 8px; color: #38bdf8; }
-
-  /* Barra de configuración */
-  .barra-config {
-    max-width: 1200px; margin: 0 auto 10px;
-    background: #fef3c7; color: #78350f;
-    padding: 8px 12px; border-radius: 8px;
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-    font-size: 0.75rem;
-  }
-  .barra-config.ok { background: #dcfce7; color: #166534; }
-  .barra-config input {
-    flex: 1; min-width: 180px; padding: 5px 8px;
-    border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.75rem;
-  }
-  .barra-config button {
-    padding: 5px 10px; border: none; border-radius: 6px;
-    background: #0ea5e9; color: white; font-weight: 600;
-    cursor: pointer; font-size: 0.75rem;
-  }
-
-  .contenedor {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px; max-width: 1200px; margin: 0 auto;
-  }
-  @media (max-width: 850px) { .contenedor { grid-template-columns: 1fr; } }
-
-  .panel { background: #1e293b; border-radius: 12px; padding: 12px;
-    border: 1px solid #334155; min-height: 500px; }
-  .panel h2 {
-    font-size: 0.75rem; text-transform: uppercase;
-    letter-spacing: 1px; color: #94a3b8; margin-bottom: 10px;
-    border-bottom: 1px solid #334155; padding-bottom: 6px;
-  }
-
-  /* ==================== APP ESTILO MERCADO PAGO ==================== */
-  #app-wrapper { background: #f3f4f6; color: #111; padding: 0; overflow: hidden; }
-  #app-wrapper h2 { padding: 10px 14px 6px; color: #64748b; border-color: #cbd5e1; margin: 0; }
-
-  .mp-phone {
-    background: #ebebeb;
-    min-height: 580px;
-    position: relative;
-    padding-bottom: 64px;
-    display: flex; flex-direction: column;
-  }
-
-  /* Header MP */
-  .mp-header {
-    background: linear-gradient(135deg, #009ee3 0%, #0077b8 100%);
-    color: white;
-    padding: 14px 16px 18px;
-    border-radius: 0 0 20px 20px;
-  }
-  .mp-header .mp-top {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 0.85rem;
-  }
-  .mp-header .mp-greeting { font-weight: 600; }
-  .mp-header .mp-icons span { margin-left: 10px; opacity: 0.9; cursor: pointer; }
-  .mp-header .mp-saldo-label {
-    font-size: 0.75rem; margin-top: 14px; opacity: 0.9;
-  }
-  .mp-header .mp-saldo {
-    font-size: 1.8rem; font-weight: 700; margin-top: 2px;
-  }
-  .mp-header .mp-actions {
-    display: flex; gap: 8px; margin-top: 14px;
-  }
-  .mp-header .mp-actions button {
-    flex: 1; padding: 8px 4px; border: none; border-radius: 8px;
-    background: rgba(255,255,255,0.2); color: white;
-    font-size: 0.7rem; font-weight: 600;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    cursor: pointer;
-  }
-  .mp-header .mp-actions button:hover { background: rgba(255,255,255,0.3); }
-  .mp-header .mp-actions button .ico { font-size: 1.1rem; }
-
-  /* Contenido */
-  .mp-content {
-    flex: 1;
-    padding: 12px 12px 0;
-    overflow-y: auto;
-    max-height: 420px;
-  }
-
-  .mp-card {
-    background: white; border-radius: 12px;
-    padding: 12px 14px; margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  }
-  .mp-card h4 { font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 8px; }
-
-  .mp-row { display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; font-size: 0.85rem; }
-  .mp-row + .mp-row { border-top: 1px solid #f0f0f0; }
-  .mp-row .left { display: flex; align-items: center; gap: 10px; }
-  .mp-row .left .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: #009ee3; color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 700;
-  }
-  .mp-row .right { text-align: right; font-weight: 600; }
-  .mp-row .right.pos { color: #00a650; }
-  .mp-row .right.neg { color: #d32f2f; }
-
-  /* Bottom nav */
-  .mp-nav {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: white; border-top: 1px solid #e5e7eb;
-    display: flex; justify-content: space-around;
-    padding: 8px 0 10px;
-  }
-  .mp-nav-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    font-size: 0.6rem; color: #888; cursor: pointer; gap: 2px;
-  }
-  .mp-nav-item.active { color: #009ee3; font-weight: 700; }
-  .mp-nav-item .ico { font-size: 1.15rem; }
-
-  /* Pantallas registro: mantener dentro del phone */
-  .pantalla { display: none; }
-  .pantalla.activa { display: block; }
-
-  /* Formulario base */
-  .form-app { padding: 14px; }
-  .form-app h3 { font-size: 1rem; color: #111; margin-bottom: 12px; }
-  label { display: block; font-size: 0.72rem; margin: 10px 0 4px;
-    font-weight: 600; color: #555; }
-  input, select {
-    width: 100%; padding: 10px; border: 1px solid #d1d5db;
-    border-radius: 8px; font-size: 0.9rem; background: white;
-    color: #111;
-  }
-  input:focus { outline: 2px solid #009ee3; border-color: transparent; }
-
-  .btn-mp {
-    width: 100%; padding: 12px; margin-top: 12px;
-    background: #009ee3; color: white; border: none;
-    border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-  }
-  .btn-mp:hover { background: #0089c9; }
-  .btn-mp:disabled { background: #94a3b8; cursor: not-allowed; }
-  .btn-mp.gray { background: #6b7280; }
-  .btn-mp.gray:hover { background: #4b5563; }
-  .btn-mp.green { background: #00a650; }
-  .btn-mp.green:hover { background: #008f44; }
-  .btn-mp.outline {
-    background: white; color: #009ee3; border: 1.5px solid #009ee3;
-  }
-
-  .error { background: #fee2e2; color: #991b1b; padding: 10px;
-    border-radius: 8px; font-size: 0.78rem; margin-top: 10px;
-    border-left: 4px solid #dc2626; }
-  .exito { background: #dcfce7; color: #166534; padding: 10px;
-    border-radius: 8px; font-size: 0.78rem; margin-top: 10px;
-    border-left: 4px solid #00a650; }
-  .info { background: #dbeafe; color: #1e40af; padding: 10px;
-    border-radius: 8px; font-size: 0.78rem; margin-top: 10px;
-    border-left: 4px solid #009ee3; }
-
-  /* Tabs */
-  .tabs { display: flex; background: #f3f4f6; border-radius: 8px; padding: 3px;
-    margin-bottom: 12px; }
-  .tabs button {
-    flex: 1; padding: 8px; border: none; background: transparent;
-    font-weight: 600; font-size: 0.8rem; color: #666;
-    border-radius: 6px; cursor: pointer;
-  }
-  .tabs button.active { background: white; color: #009ee3;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
-
-  /* Cámara circular */
-  .camara-box {
-    width: 160px; height: 160px; margin: 14px auto;
-    border-radius: 50%; overflow: hidden; background: #d1d5db;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 3rem; position: relative;
-  }
-  .camara-box video { width: 100%; height: 100%; object-fit: cover; }
-
-  /* Progreso */
-  .progreso { display: flex; gap: 3px; padding: 10px 14px 0; }
-  .progreso span { flex: 1; height: 3px; background: #d1d5db;
-    border-radius: 2px; transition: background 0.3s; }
-  .progreso span.hecho { background: #00a650; }
-  .progreso span.activo { background: #009ee3; }
-
-  /* Cotización dolar */
-  .cot-card {
-    background: linear-gradient(135deg, #00a650 0%, #007c3a 100%);
-    color: white; border-radius: 12px; padding: 14px;
-    margin-bottom: 10px;
-  }
-  .cot-card .title { font-size: 0.75rem; opacity: 0.9; }
-  .cot-card .precios { display: flex; gap: 12px; margin-top: 8px; }
-  .cot-card .precio {
-    flex: 1; background: rgba(255,255,255,0.15);
-    border-radius: 8px; padding: 10px; text-align: center;
-  }
-  .cot-card .precio .lbl { font-size: 0.65rem; opacity: 0.9; }
-  .cot-card .precio .val { font-size: 1.2rem; font-weight: 700; margin-top: 2px; }
-
-  /* Backend log */
-  #backend { font-family: 'Courier New', monospace; font-size: 0.72rem; }
-  #log { max-height: 700px; overflow-y: auto; }
-  .log-linea { padding: 3px 0; border-bottom: 1px dashed #334155;
-    word-wrap: break-word; }
-  .log-req { color: #fbbf24; } .log-ok { color: #4ade80; }
-  .log-err { color: #f87171; } .log-info { color: #94a3b8; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:12px}
+  h1{font-size:.95rem;text-align:center;margin-bottom:8px;color:#38bdf8}
+  .barra-config{max-width:1200px;margin:0 auto 10px;background:#fef3c7;color:#78350f;padding:8px 12px;border-radius:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.75rem}
+  .barra-config.ok{background:#dcfce7;color:#166534}
+  .barra-config input{flex:1;min-width:180px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:.75rem}
+  .barra-config button{padding:5px 10px;border:none;border-radius:6px;background:#0ea5e9;color:#fff;font-weight:600;cursor:pointer;font-size:.75rem}
+  .contenedor{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:1200px;margin:0 auto}
+  @media(max-width:850px){.contenedor{grid-template-columns:1fr}}
+  .panel{background:#1e293b;border-radius:12px;padding:12px;border:1px solid #334155;min-height:500px}
+  .panel h2{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;border-bottom:1px solid #334155;padding-bottom:6px}
+  #app-wrapper{background:#f3f4f6;color:#111;padding:0;overflow:hidden}
+  #app-wrapper h2{padding:10px 14px 6px;color:#64748b;border-color:#cbd5e1;margin:0}
+  .mp-phone{background:#ebebeb;min-height:640px;position:relative;padding-bottom:64px;display:flex;flex-direction:column}
+  .mp-header{background:linear-gradient(135deg,#009ee3 0%,#0077b8 100%);color:#fff;padding:14px 16px 18px;border-radius:0 0 20px 20px}
+  .mp-header .mp-top{display:flex;justify-content:space-between;align-items:center;font-size:.85rem}
+  .mp-header .mp-greeting{font-weight:600}
+  .mp-header .mp-icons span{margin-left:10px;opacity:.9}
+  .mp-header .mp-saldo-label{font-size:.75rem;margin-top:14px;opacity:.9}
+  .mp-header .mp-saldo{font-size:1.8rem;font-weight:700;margin-top:2px}
+  .mp-header .mp-actions{display:flex;gap:8px;margin-top:14px}
+  .mp-header .mp-actions button{flex:1;padding:8px 4px;border:none;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;font-size:.7rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+  .mp-header .mp-actions button:hover{background:rgba(255,255,255,.3)}
+  .mp-header .mp-actions button .ico{font-size:1.1rem}
+  .mp-content{flex:1;padding:12px 12px 0;overflow-y:auto;max-height:480px}
+  .mp-card{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .mp-card h4{font-size:.8rem;color:#666;font-weight:600;margin-bottom:8px}
+  .mp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:.85rem}
+  .mp-row + .mp-row{border-top:1px solid #f0f0f0}
+  .mp-row .left{display:flex;align-items:center;gap:10px}
+  .mp-row .left .avatar{width:32px;height:32px;border-radius:50%;background:#009ee3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+  .mp-row .right{text-align:right;font-weight:600}
+  .mp-row .right.pos{color:#00a650}
+  .mp-row .right.neg{color:#d32f2f}
+  .mp-nav{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:flex;justify-content:space-around;padding:8px 0 10px;overflow-x:auto}
+  .mp-nav-item{flex:1 0 auto;min-width:56px;display:flex;flex-direction:column;align-items:center;font-size:.55rem;color:#888;cursor:pointer;gap:2px}
+  .mp-nav-item.active{color:#009ee3;font-weight:700}
+  .mp-nav-item .ico{font-size:1.1rem}
+  .pantalla{display:none}
+  .pantalla.activa{display:block}
+  .form-app{padding:14px}
+  .form-app h3{font-size:1rem;color:#111;margin-bottom:12px}
+  label{display:block;font-size:.72rem;margin:10px 0 4px;font-weight:600;color:#555}
+  input,select{width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:.9rem;background:#fff;color:#111}
+  input:focus{outline:2px solid #009ee3;border-color:transparent}
+  .btn-mp{width:100%;padding:12px;margin-top:12px;background:#009ee3;color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer}
+  .btn-mp:hover{background:#0089c9}
+  .btn-mp.gray{background:#6b7280}
+  .btn-mp.gray:hover{background:#4b5563}
+  .btn-mp.green{background:#00a650}
+  .btn-mp.green:hover{background:#008f44}
+  .btn-mp.outline{background:#fff;color:#009ee3;border:1.5px solid #009ee3}
+  .btn-mp.outline:hover{background:#f0f9ff}
+  .error{background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;font-size:.78rem;margin-top:10px;border-left:4px solid #dc2626}
+  .exito{background:#dcfce7;color:#166534;padding:10px;border-radius:8px;font-size:.78rem;margin-top:10px;border-left:4px solid #00a650}
+  .info{background:#dbeafe;color:#1e40af;padding:10px;border-radius:8px;font-size:.78rem;margin-top:10px;border-left:4px solid #009ee3}
+  .tabs{display:flex;background:#f3f4f6;border-radius:8px;padding:3px;margin-bottom:12px}
+  .tabs button{flex:1;padding:8px;border:none;background:transparent;font-weight:600;font-size:.8rem;color:#666;border-radius:6px;cursor:pointer}
+  .tabs button.active{background:#fff;color:#009ee3;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .camara-box{width:160px;height:160px;margin:14px auto;border-radius:50%;overflow:hidden;background:#d1d5db;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative}
+  .camara-box video{width:100%;height:100%;object-fit:cover}
+  .progreso{display:flex;gap:3px;padding:10px 14px 0}
+  .progreso span{flex:1;height:3px;background:#d1d5db;border-radius:2px;transition:background .3s}
+  .progreso span.hecho{background:#00a650}
+  .progreso span.activo{background:#009ee3}
+  .cot-card{background:linear-gradient(135deg,#00a650 0%,#007c3a 100%);color:#fff;border-radius:12px;padding:14px;margin-bottom:10px}
+  .cot-card .title{font-size:.75rem;opacity:.9}
+  .cot-card .precios{display:flex;gap:12px;margin-top:8px}
+  .cot-card .precio{flex:1;background:rgba(255,255,255,.15);border-radius:8px;padding:10px;text-align:center}
+  .cot-card .precio .lbl{font-size:.65rem;opacity:.9}
+  .cot-card .precio .val{font-size:1.2rem;font-weight:700;margin-top:2px}
+  .tope-bar{background:#f3f4f6;border-radius:8px;padding:10px;margin-bottom:10px;font-size:.72rem;color:#555}
+  .tope-bar .tope-progress{background:#e5e7eb;height:6px;border-radius:3px;overflow:hidden;margin:6px 0}
+  .tope-bar .tope-progress .fill{height:100%;background:#00a650;transition:width .3s}
+  .tope-bar .tope-progress .fill.warn{background:#f59e0b}
+  .tope-bar .tope-progress .fill.danger{background:#dc2626}
+  .qr-box{text-align:center;padding:14px;background:#fff;border-radius:12px;margin-bottom:10px}
+  .qr-box #qrContainer{display:inline-block;padding:8px;background:#fff;border-radius:8px}
+  .qr-box #qrContainer img,.qr-box #qrContainer canvas{display:block;border-radius:4px}
+  #qrReader{width:100%;max-width:300px;margin:10px auto;border-radius:8px}
+  .factura-card{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .factura-card .logo{width:40px;height:40px;border-radius:10px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+  .factura-card .info{flex:1;min-width:0}
+  .factura-card .info .emp{font-weight:600;font-size:.85rem;color:#111}
+  .factura-card .info .det{font-size:.68rem;color:#888}
+  .factura-card .monto{text-align:right;font-weight:700;font-size:.9rem;color:#111}
+  .factura-card .monto button{display:block;margin-top:4px;padding:5px 10px;background:#009ee3;color:#fff;border:none;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer}
+  .veraz-card{border-radius:12px;padding:14px;margin-bottom:10px;color:#fff;position:relative;overflow:hidden}
+  .veraz-card .titulo{font-size:.7rem;opacity:.9}
+  .veraz-card .cat{font-size:1.6rem;font-weight:700;margin:4px 0}
+  .veraz-card .detalle{font-size:.72rem;opacity:.9}
+  .veraz-card .score-bar{background:rgba(255,255,255,.25);height:6px;border-radius:3px;margin-top:8px;overflow:hidden}
+  .veraz-card .score-bar .fill{height:100%;background:#fff}
+  .tipo-prestamo{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+  .tipo-prestamo:hover{border-color:#009ee3}
+  .tipo-prestamo .head{display:flex;justify-content:space-between;align-items:center}
+  .tipo-prestamo .nombre{font-weight:700;font-size:.9rem;color:#111}
+  .tipo-prestamo .tna{background:#009ee3;color:#fff;padding:3px 8px;border-radius:6px;font-size:.7rem;font-weight:700}
+  .tipo-prestamo .desc{font-size:.72rem;color:#666;margin-top:4px}
+  .tipo-prestamo .rango{font-size:.68rem;color:#888;margin-top:4px}
+  .simulador-box{background:#f0f9ff;border:1px solid #009ee3;border-radius:10px;padding:12px;margin:10px 0}
+  .simulador-box .fila{display:flex;justify-content:space-between;padding:6px 0;font-size:.82rem;border-bottom:1px dashed #cbd5e1}
+  .simulador-box .fila:last-child{border-bottom:none}
+  .simulador-box .fila .lbl{color:#666}
+  .simulador-box .fila .val{font-weight:700;color:#111}
+  .simulador-box .fila.total{font-size:1rem;padding-top:10px}
+  .simulador-box .fila.total .val{color:#009ee3}
+  .prestamo-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .prestamo-item .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .prestamo-item .head .tipo{font-weight:700;font-size:.88rem;color:#111}
+  .prestamo-item .head .estado{padding:3px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
+  .prestamo-item .head .estado.ACTIVO{background:#dcfce7;color:#166534}
+  .prestamo-item .head .estado.CANCELADO{background:#e5e7eb;color:#4b5563}
+  .prestamo-item .head .estado.REFINANCIADO{background:#fef3c7;color:#78350f}
+  .prestamo-item .info{font-size:.72rem;color:#666}
+  .prestamo-item .info b{color:#111}
+  .cuota-mini{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:.75rem}
+  .cuota-mini:last-child{border-bottom:none}
+  .cuota-mini .num{background:#f3f4f6;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+  .cuota-mini.PAGADA{opacity:.55}
+  .cuota-mini.PAGADA .num{background:#00a650;color:#fff}
+  .cuota-mini.REFINANCIADA{opacity:.55}
+  .cuota-mini.REFINANCIADA .num{background:#f59e0b;color:#fff}
+  .cuota-mini .btn-pagar{padding:4px 10px;background:#009ee3;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
+  .cuota-mini .btn-pagar:hover{background:#0089c9}
+  .cuota-mini .btn-mora{padding:4px 10px;background:#dc2626;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
+  .pf-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .pf-item .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .pf-item .head .tipo{font-weight:700;font-size:.88rem;color:#111}
+  .pf-item .head .estado{padding:3px 8px;border-radius:6px;font-size:.65rem;font-weight:700}
+  .pf-item .head .estado.ACTIVO{background:#dbeafe;color:#1e40af}
+  .pf-item .head .estado.VENCIDO{background:#dcfce7;color:#166534}
+  .pf-item .head .estado.RESCATADO{background:#e5e7eb;color:#4b5563}
+  .pf-item .info{font-size:.72rem;color:#666}
+  .pf-item .info b{color:#111}
+  #backend{font-family:'Courier New',monospace;font-size:.72rem}
+  #log{max-height:700px;overflow-y:auto}
+  .log-linea{padding:3px 0;border-bottom:1px dashed #334155;word-wrap:break-word}
+  .log-req{color:#fbbf24}.log-ok{color:#4ade80}
+  .log-err{color:#f87171}.log-info{color:#94a3b8}
 </style>
 </head>
 <body>
@@ -236,13 +161,9 @@
 </div>
 
 <div class="contenedor">
-
-  <!-- ============ PANEL IZQUIERDO: APP ESTILO MP ============ -->
   <div class="panel" id="app-wrapper">
     <h2>📱 App del alumno</h2>
     <div class="mp-phone">
-
-      <!-- Header dinámico -->
       <div class="mp-header" id="mpHeader">
         <div class="mp-top">
           <span class="mp-greeting" id="mpGreeting">Bienvenido 👋</span>
@@ -255,6 +176,7 @@
             <button onclick="irATransferir()"><span class="ico">📤</span>Transferir</button>
             <button onclick="irADinero()"><span class="ico">💰</span>Mi dinero</button>
             <button onclick="irADolar()"><span class="ico">💵</span>Dólar</button>
+            <button onclick="irAPrestamos()"><span class="ico">💳</span>Préstamos</button>
             <button onclick="cargarSaldo()"><span class="ico">➕</span>Cargar</button>
           </div>
         </div>
@@ -265,74 +187,49 @@
         <span></span><span></span><span></span><span></span>
       </div>
 
-      <!-- ============ PANTALLAS DE ONBOARDING ============ -->
+      <!-- ONBOARDING -->
       <div class="pantalla activa form-app" id="p1">
         <h3>Crear cuenta</h3>
-        <label>Email</label>
-        <input type="email" id="email" placeholder="juan@escuela.edu">
-        <label>Teléfono (11 1234-5678)</label>
-        <input type="tel" id="telefono" placeholder="11 1234-5678">
+        <label>Email</label><input type="email" id="email" placeholder="juan@escuela.edu">
+        <label>Teléfono</label><input type="tel" id="telefono" placeholder="11 1234-5678">
         <button class="btn-mp" onclick="paso1()">Registrarme</button>
         <div id="msg1"></div>
       </div>
-
       <div class="pantalla form-app" id="p2">
         <h3>Verificá tu teléfono</h3>
-        <p style="font-size:0.78rem;color:#666;margin-top:4px">
-          Te enviamos un código. Miralo en el panel derecho 👉
-        </p>
-        <label>Código OTP</label>
-        <input type="text" id="otp" maxlength="6" placeholder="000000" inputmode="numeric">
+        <p style="font-size:.78rem;color:#666;margin-top:4px">El código aparece en el panel derecho 👉</p>
+        <label>Código OTP</label><input type="text" id="otp" maxlength="6" inputmode="numeric" placeholder="000000">
         <button class="btn-mp" onclick="paso2()">Verificar</button>
         <div id="msg2"></div>
       </div>
-
       <div class="pantalla form-app" id="p3">
         <h3>Tus datos personales</h3>
-        <p style="font-size:0.72rem;color:#666;margin-top:4px">
-          Probá con DNI <b>12345678</b> (Juan) o <b>87654321</b> (María)
-        </p>
-        <label>Nombre</label>
-        <input type="text" id="nombre" placeholder="Juan">
-        <label>Apellido</label>
-        <input type="text" id="apellido" placeholder="Pérez">
-        <label>DNI</label>
-        <input type="text" id="dni" placeholder="12345678" inputmode="numeric">
+        <p style="font-size:.72rem;color:#666;margin-top:4px">DNIs de prueba: <b>12345678</b> (Juan), <b>87654321</b> (María), <b>22222222</b> (Ana)</p>
+        <label>Nombre</label><input type="text" id="nombre" placeholder="Juan">
+        <label>Apellido</label><input type="text" id="apellido" placeholder="Pérez">
+        <label>DNI</label><input type="text" id="dni" inputmode="numeric" placeholder="12345678">
         <button class="btn-mp" onclick="paso3()">Validar con RENAPER</button>
         <div id="msg3"></div>
       </div>
-
       <div class="pantalla form-app" id="p4">
         <h3>Selfie y prueba de vida</h3>
-        <p style="font-size:0.75rem;color:#666;margin-top:4px">
-          Mirá a la cámara y tocá "Capturar".
-        </p>
         <div class="camara-box" id="camaraBox">📷</div>
         <button class="btn-mp outline" onclick="iniciarCamara()" id="btnCamara">Activar cámara</button>
         <button class="btn-mp" onclick="capturarSelfie()" id="btnCapturar" style="display:none">📸 Capturar y validar</button>
         <div id="msg4"></div>
       </div>
-
       <div class="pantalla form-app" id="p5">
         <h3>Controles de seguridad</h3>
-        <p style="font-size:0.78rem;color:#666;margin-top:4px">
-          Verificamos listas PEP (UIF) y sanciones (BCRA).
-        </p>
+        <p style="font-size:.78rem;color:#666;margin-top:4px">Verificamos listas PEP (UIF) y sanciones (BCRA).</p>
         <button class="btn-mp" onclick="paso5()">Continuar</button>
         <div id="msg5"></div>
       </div>
-
       <div class="pantalla form-app" id="p6">
         <h3>Creá tu PIN</h3>
-        <p style="font-size:0.78rem;color:#666;margin-top:4px">
-          6 dígitos. No uses 123456 ni similares.
-        </p>
-        <label>PIN</label>
-        <input type="password" id="pin" maxlength="6" placeholder="••••••" inputmode="numeric">
+        <label>PIN (6 dígitos)</label><input type="password" id="pin" maxlength="6" inputmode="numeric" placeholder="••••••">
         <button class="btn-mp" onclick="paso6()">Crear PIN</button>
         <div id="msg6"></div>
       </div>
-
       <div class="pantalla form-app" id="p7">
         <h3>🎉 ¡Cuenta creada!</h3>
         <div class="exito" id="datosCuenta"></div>
@@ -340,12 +237,12 @@
         <div id="msg7"></div>
       </div>
 
-      <!-- ============ DASHBOARD MP ============ -->
+      <!-- DASHBOARD -->
       <div class="pantalla" id="p9">
         <div class="mp-content">
           <div class="mp-card">
             <h4>Últimos movimientos</h4>
-            <div id="ultimosMovs"><div style="text-align:center;color:#888;font-size:0.78rem;padding:10px">Sin movimientos todavía</div></div>
+            <div id="ultimosMovs"><div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos todavía</div></div>
           </div>
           <div class="mp-card">
             <h4>Tus cuentas</h4>
@@ -357,11 +254,23 @@
               <div class="left"><span class="avatar" style="background:#00a650">U$</span> Dólares (MEP)</div>
               <div class="right" id="saldoUsdDash">US$ 0</div>
             </div>
+            <div class="mp-row" onclick="irAMiQR()" style="cursor:pointer">
+              <div class="left"><span class="avatar" style="background:#7c3aed">📲</span> Mi código QR</div>
+              <div class="right" style="font-size:.75rem;color:#888">Mostrar →</div>
+            </div>
+            <div class="mp-row" onclick="irAPrestamos()" style="cursor:pointer">
+              <div class="left"><span class="avatar" style="background:#00a650">💳</span> Préstamos y créditos</div>
+              <div class="right" style="font-size:.75rem;color:#888">Ir →</div>
+            </div>
+            <div class="mp-row" onclick="irAPlazoFijo()" style="cursor:pointer">
+              <div class="left"><span class="avatar" style="background:#f59e0b">🏦</span> Plazo fijo</div>
+              <div class="right" style="font-size:.75rem;color:#888">Ir →</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ============ MI DINERO ============ -->
+      <!-- MI DINERO -->
       <div class="pantalla" id="p14">
         <div class="mp-content">
           <div class="mp-card">
@@ -377,114 +286,238 @@
         </div>
       </div>
 
-      <!-- ============ DÓLAR ============ -->
+      <!-- DÓLAR -->
       <div class="pantalla form-app" id="p15">
         <h3>💵 Dólar MEP</h3>
-
         <div class="cot-card">
-          <div class="title">Cotización en vivo · <span id="cotFuente">MEP</span></div>
+          <div class="title">Cotización · <span id="cotFuente">MEP</span></div>
           <div class="precios">
-            <div class="precio">
-              <div class="lbl">Compra</div>
-              <div class="val" id="cotCompra">$--</div>
-            </div>
-            <div class="precio">
-              <div class="lbl">Venta</div>
-              <div class="val" id="cotVenta">$--</div>
-            </div>
-          </div>
-          <div style="font-size:0.65rem;opacity:0.85;margin-top:8px;text-align:center">
-            Vos comprás al precio de <b>venta</b> y vendés al de <b>compra</b>
+            <div class="precio"><div class="lbl">Compra</div><div class="val" id="cotCompra">$--</div></div>
+            <div class="precio"><div class="lbl">Venta</div><div class="val" id="cotVenta">$--</div></div>
           </div>
         </div>
-
+        <div class="tope-bar">
+          <div style="display:flex;justify-content:space-between">
+            <span><b>Tope mensual de compra</b></span>
+            <span id="topeTexto">US$ 0 / 1000</span>
+          </div>
+          <div class="tope-progress"><div class="fill" id="topeFill" style="width:0%"></div></div>
+          <div id="topeInfo" style="font-size:.68rem">Cargando...</div>
+        </div>
         <div class="tabs">
           <button class="active" onclick="setModoDolar('compra')" id="tabCompra">Comprar USD</button>
           <button onclick="setModoDolar('venta')" id="tabVenta">Vender USD</button>
         </div>
-
         <div id="dolarCompraForm">
-          <label>Monto en USD a comprar</label>
-          <input type="number" id="usdCompra" placeholder="100" min="1" max="5000" step="1" oninput="calcCompra()">
-          <div class="info" id="calcCompraInfo">Ingresá un monto para ver el costo.</div>
+          <label>Monto en USD</label>
+          <input type="number" id="usdCompra" placeholder="100" min="1" max="5000" oninput="calcCompra()">
+          <div class="info" id="calcCompraInfo">Ingresá un monto.</div>
           <button class="btn-mp green" onclick="confirmarCompraDolar()">✅ Comprar dólares</button>
         </div>
-
         <div id="dolarVentaForm" style="display:none">
           <label>Monto en USD a vender</label>
-          <input type="number" id="usdVenta" placeholder="50" min="1" max="5000" step="1" oninput="calcVenta()">
-          <div class="info" id="calcVentaInfo">Ingresá un monto para ver cuántos pesos recibís.</div>
+          <input type="number" id="usdVenta" placeholder="50" min="1" max="5000" oninput="calcVenta()">
+          <div class="info" id="calcVentaInfo">Ingresá un monto.</div>
           <button class="btn-mp" onclick="confirmarVentaDolar()">✅ Vender dólares</button>
         </div>
-
         <div id="msgDolar"></div>
-        <button class="btn-mp gray" onclick="irADashboard()">← Volver al inicio</button>
+        <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
       </div>
 
-      <!-- ============ TRANSFERIR ============ -->
+      <!-- MI QR -->
+      <div class="pantalla form-app" id="p16">
+        <h3>📲 Mi código QR</h3>
+        <p style="font-size:.75rem;color:#666;margin-bottom:10px">Mostralo para que te transfieran.</p>
+        <div class="qr-box">
+          <div id="qrContainer"></div>
+          <div style="margin-top:10px;font-size:.8rem;color:#111">
+            <div style="font-weight:700" id="qrAliasNombre"></div>
+            <div style="font-size:.7rem;color:#888" id="qrAliasCvu"></div>
+          </div>
+        </div>
+        <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
+      </div>
+
+      <!-- ESCANEAR QR -->
+      <div class="pantalla form-app" id="p17">
+        <h3>📷 Escanear QR</h3>
+        <div id="qrReader"></div>
+        <div id="msgQR" style="margin-top:10px"></div>
+        <button class="btn-mp gray" onclick="detenerEscaner(); irATransferir()">← Volver</button>
+      </div>
+
+      <!-- SERVICIOS -->
+      <div class="pantalla" id="p18">
+        <div class="mp-content">
+          <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h4 style="margin:0">Facturas pendientes</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPendientes">Cargando...</div>
+            </div>
+            <button style="padding:8px 12px;background:#009ee3;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="generarFacturasDemo()">🎲 Generar</button>
+          </div>
+          <div id="listaFacturas"></div>
+        </div>
+      </div>
+
+      <!-- COMPROBANTE PAGO -->
+      <div class="pantalla form-app" id="p19">
+        <h3>✅ Pago realizado</h3>
+        <div class="exito" id="comprobantePago"></div>
+        <button class="btn-mp" onclick="irADashboard()">Volver al inicio</button>
+      </div>
+
+      <!-- PRÉSTAMOS LISTA -->
+      <div class="pantalla" id="p20">
+        <div class="mp-content">
+          <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h4 style="margin:0">Mis préstamos</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPrestamos">Cargando...</div>
+            </div>
+            <button style="padding:8px 12px;background:#00a650;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="nuevoPrestamo()">+ Solicitar</button>
+          </div>
+          <div id="listaPrestamos"></div>
+        </div>
+      </div>
+
+      <!-- PRÉSTAMOS NUEVO -->
+      <div class="pantalla form-app" id="p21">
+        <h3>💳 Nuevo préstamo</h3>
+        <div id="verazBox"></div>
+        <p style="font-size:.72rem;color:#666;margin:10px 0 4px"><b>Elegí el tipo:</b></p>
+        <div id="listaTipos"></div>
+        <button class="btn-mp gray" onclick="irAPrestamos()">← Volver</button>
+      </div>
+
+      <!-- PRÉSTAMOS SIMULADOR -->
+      <div class="pantalla form-app" id="p22">
+        <h3 id="tituloSimulador">Simular préstamo</h3>
+        <div class="info" id="infoTipo"></div>
+        <label>Monto ($)</label>
+        <input type="number" id="montoPrestamo" placeholder="100000" min="10000" step="1000" oninput="actualizarSimulacion()">
+        <label>Plazo (meses)</label>
+        <select id="plazoPrestamo" onchange="actualizarSimulacion()"></select>
+        <div id="resultadoSimulacion"></div>
+        <button class="btn-mp green" onclick="confirmarSolicitudPrestamo()" id="btnSolicitar" style="display:none">✅ Solicitar préstamo</button>
+        <button class="btn-mp gray" onclick="mostrar('p21')">← Elegir otro tipo</button>
+        <div id="msgPrestamo"></div>
+      </div>
+
+      <!-- CUOTAS -->
+      <div class="pantalla form-app" id="p23">
+        <h3>📅 Cuotas del préstamo</h3>
+        <div class="info" id="infoPrestamo"></div>
+        <button class="btn-mp outline" onclick="refinanciarActual()" id="btnRefinanciar" style="display:none">🔄 Refinanciar cuotas pendientes</button>
+        <div id="listaCuotas"></div>
+        <button class="btn-mp gray" onclick="irAPrestamos()">← Volver</button>
+        <div id="msgCuota"></div>
+      </div>
+
+      <!-- COMPROBANTE PRÉSTAMO -->
+      <div class="pantalla form-app" id="p24">
+        <h3>🎉 Préstamo acreditado</h3>
+        <div class="exito" id="comprobantePrestamo"></div>
+        <button class="btn-mp" onclick="irAPrestamos()">Ver mis préstamos</button>
+        <button class="btn-mp gray" onclick="irADashboard()">Volver al inicio</button>
+      </div>
+
+      <!-- PLAZO FIJO LISTA -->
+      <div class="pantalla" id="p25">
+        <div class="mp-content">
+          <div class="mp-card" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h4 style="margin:0">Mis plazos fijos</h4>
+              <div style="font-size:.68rem;color:#888;margin-top:2px" id="totalPF">Cargando...</div>
+            </div>
+            <button style="padding:8px 12px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer" onclick="nuevoPlazoFijo()">+ Constituir</button>
+          </div>
+          <div id="listaPF"></div>
+        </div>
+      </div>
+
+      <!-- PLAZO FIJO NUEVO -->
+      <div class="pantalla form-app" id="p26">
+        <h3>🏦 Nuevo plazo fijo</h3>
+        <div class="info">Elegí el plazo. A mayor tiempo, mayor tasa (TNA).</div>
+        <p style="font-size:.72rem;color:#666;margin:10px 0 4px"><b>Elegí el tipo:</b></p>
+        <div id="listaTiposPF"></div>
+        <button class="btn-mp gray" onclick="irAPlazoFijo()">← Volver</button>
+      </div>
+
+      <!-- PLAZO FIJO SIMULADOR -->
+      <div class="pantalla form-app" id="p27">
+        <h3 id="tituloSimPF">Simular plazo fijo</h3>
+        <div class="info" id="infoTipoPF"></div>
+        <label>Monto ($)</label>
+        <input type="number" id="montoPF" placeholder="100000" min="10000" step="1000" oninput="actualizarSimPF()">
+        <div id="resultadoSimPF"></div>
+        <button class="btn-mp green" onclick="confirmarConstituirPF()" id="btnConstituirPF" style="display:none">✅ Constituir plazo fijo</button>
+        <button class="btn-mp gray" onclick="mostrar('p26')">← Elegir otro tipo</button>
+        <div id="msgPF"></div>
+      </div>
+
+      <!-- COMPROBANTE PF -->
+      <div class="pantalla form-app" id="p28">
+        <h3>🎉 Plazo fijo constituido</h3>
+        <div class="exito" id="comprobantePF"></div>
+        <button class="btn-mp" onclick="irAPlazoFijo()">Ver mis plazos fijos</button>
+        <button class="btn-mp gray" onclick="irADashboard()">Volver al inicio</button>
+      </div>
+
+      <!-- TRANSFERIR -->
       <div class="pantalla form-app" id="p10">
         <h3>💸 Nueva transferencia</h3>
-        <label>CVU o alias del destinatario</label>
+        <label>CVU o alias</label>
         <input type="text" id="destino" placeholder="juan.perez.mp">
-        <p style="font-size:0.7rem;color:#666;margin-top:6px">
-          Probá: <b>juan.perez.mp</b> o <b>maria.gomez.mp</b>
-        </p>
+        <p style="font-size:.7rem;color:#666;margin-top:6px">Probá: <b>juan.perez.mp</b> o <b>maria.gomez.mp</b></p>
         <button class="btn-mp" onclick="buscarDestino()">Buscar destinatario</button>
+        <button class="btn-mp outline" onclick="irAEscanearQR()">📷 Escanear QR</button>
         <div id="msg10"></div>
         <button class="btn-mp gray" onclick="irADashboard()">← Volver</button>
       </div>
 
+      <!-- CONFIRMAR TRANSFERENCIA -->
       <div class="pantalla form-app" id="p11">
         <h3>Confirmar transferencia</h3>
         <div class="info" id="datosDestino"></div>
-        <label>Monto ($)</label>
-        <input type="number" id="monto" placeholder="1000" min="1" step="0.01">
-        <label>Concepto (opcional)</label>
-        <input type="text" id="concepto" placeholder="Ej: pago de viáticos" maxlength="80">
+        <label>Monto ($)</label><input type="number" id="monto" placeholder="1000" min="1" step="0.01">
+        <label>Concepto</label><input type="text" id="concepto" placeholder="Ej: pago" maxlength="80">
         <button class="btn-mp green" onclick="confirmarTransferencia()">✅ Confirmar</button>
         <button class="btn-mp gray" onclick="mostrar('p10')">← Volver</button>
         <div id="msg11"></div>
       </div>
 
+      <!-- COMPROBANTE TRANSFERENCIA -->
       <div class="pantalla form-app" id="p12">
         <h3>🎉 Transferencia realizada</h3>
         <div class="exito" id="comprobante"></div>
         <button class="btn-mp" onclick="irADashboard()">Volver al inicio</button>
       </div>
 
-      <!-- ============ HISTORIAL ============ -->
+      <!-- HISTORIAL -->
       <div class="pantalla" id="p13">
         <div class="mp-content">
           <div class="mp-card">
             <h4>Historial de movimientos</h4>
-            <div id="listaHistorial" style="font-size:0.8rem"></div>
+            <div id="listaHistorial" style="font-size:.8rem"></div>
           </div>
         </div>
       </div>
 
-      <!-- ============ BARRA DE NAVEGACIÓN MP ============ -->
+      <!-- NAV -->
       <div class="mp-nav" id="mpNav" style="display:none">
-        <div class="mp-nav-item" data-nav="p9" onclick="mostrar('p9'); actualizarNav('p9'); irADashboard()">
-          <span class="ico">🏠</span><span>Inicio</span>
-        </div>
-        <div class="mp-nav-item" data-nav="p14" onclick="irADinero()">
-          <span class="ico">💰</span><span>Mi dinero</span>
-        </div>
-        <div class="mp-nav-item" data-nav="p10" onclick="irATransferir()">
-          <span class="ico">📤</span><span>Transferir</span>
-        </div>
-        <div class="mp-nav-item" data-nav="p15" onclick="irADolar()">
-          <span class="ico">💵</span><span>Dólar</span>
-        </div>
-        <div class="mp-nav-item" data-nav="p13" onclick="verHistorial()">
-          <span class="ico">📜</span><span>Historial</span>
-        </div>
+        <div class="mp-nav-item" data-nav="p9" onclick="irADashboard()"><span class="ico">🏠</span><span>Inicio</span></div>
+        <div class="mp-nav-item" data-nav="p14" onclick="irADinero()"><span class="ico">💰</span><span>Dinero</span></div>
+        <div class="mp-nav-item" data-nav="p10" onclick="irATransferir()"><span class="ico">📤</span><span>Enviar</span></div>
+        <div class="mp-nav-item" data-nav="p18" onclick="irAServicios()"><span class="ico">🧾</span><span>Servicios</span></div>
+        <div class="mp-nav-item" data-nav="p15" onclick="irADolar()"><span class="ico">💵</span><span>Dólar</span></div>
+        <div class="mp-nav-item" data-nav="p20" onclick="irAPrestamos()"><span class="ico">💳</span><span>Créditos</span></div>
+        <div class="mp-nav-item" data-nav="p25" onclick="irAPlazoFijo()"><span class="ico">🏦</span><span>Inversiones</span></div>
       </div>
-
     </div>
   </div>
 
-  <!-- ============ PANEL DERECHO: BACKEND ============ -->
   <div class="panel" id="backend">
     <h2>🖥️ Backend / Base de datos</h2>
     <div id="log">
@@ -495,31 +528,30 @@
 
 <script>
 // ==================== CONFIG ====================
-let APPS_SCRIPT_URL = localStorage.getItem('APPS_SCRIPT_URL') || '';
+let APPS_SCRIPT_URL = localStorage.getItem('APPS_SCRIPT_URL') || 'https://script.google.com/macros/s/AKfycbyue7JUL3bQ3OXytGMTyowivFQnKaK9bQXHrFf2_uT2EwCtEE5-5P0EGSbEBYYnrw8U/exec';
 const inputUrl = document.getElementById('inputUrl');
-if (APPS_SCRIPT_URL) { inputUrl.value = APPS_SCRIPT_URL; actualizarBarraConfig(true); }
-
+if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'TU_URL_AQUI') {
+  inputUrl.value = APPS_SCRIPT_URL;
+  actualizarBarraConfig(true);
+}
 function guardarUrl() {
   const url = inputUrl.value.trim();
   if (!url) { localStorage.removeItem('APPS_SCRIPT_URL'); APPS_SCRIPT_URL = ''; actualizarBarraConfig(false); return; }
-  APPS_SCRIPT_URL = url; localStorage.setItem('APPS_SCRIPT_URL', url);
-  actualizarBarraConfig(true); log('URL del backend guardada', 'ok');
+  APPS_SCRIPT_URL = url; localStorage.setItem('APPS_SCRIPT_URL', url); actualizarBarraConfig(true);
+  log('URL del backend guardada', 'ok');
 }
 function actualizarBarraConfig(ok) {
-  const barra = document.getElementById('barraConfig'), estado = document.getElementById('estadoConfig');
-  barra.classList.toggle('ok', ok);
-  estado.textContent = ok ? '✅ Conectado al backend' : '⚠️ Modo local (sin backend)';
+  document.getElementById('barraConfig').classList.toggle('ok', ok);
+  document.getElementById('estadoConfig').textContent = ok ? '✅ Conectado al backend' : '⚠️ Modo local (sin backend)';
 }
 async function probarConexion() {
   if (!APPS_SCRIPT_URL) { log('Falta URL', 'err'); return; }
   log('GET ?action=ping', 'req');
-  try {
-    const r = await fetch(APPS_SCRIPT_URL + '?action=ping');
-    log('← ' + JSON.stringify(await r.json()), 'ok');
-  } catch(e) { log('← Error: ' + e.message, 'err'); }
+  try { const r = await fetch(APPS_SCRIPT_URL + '?action=ping'); log('← ' + JSON.stringify(await r.json()), 'ok'); }
+  catch(e) { log('← Error: ' + e.message, 'err'); }
 }
 
-// ==================== LOG ====================
+// ==================== LOG & NAV ====================
 function log(texto, tipo='info') {
   const div = document.getElementById('log');
   const linea = document.createElement('div');
@@ -528,34 +560,38 @@ function log(texto, tipo='info') {
   div.appendChild(linea); div.scrollTop = div.scrollHeight;
 }
 function mostrar(id) {
+  if (typeof qrScanner !== 'undefined' && qrScanner && id !== 'p17') detenerEscaner();
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
-  const enOnboarding = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
-  document.getElementById('mpNav').style.display = enOnboarding ? 'none' : 'flex';
-  document.getElementById('mpSaldoBox').style.display = enOnboarding ? 'none' : 'block';
+  const onboarding = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
+  document.getElementById('mpNav').style.display = onboarding ? 'none' : 'flex';
+  document.getElementById('mpSaldoBox').style.display = onboarding ? 'none' : 'block';
   actualizarNav(id);
 }
-function actualizarNav(pantalla) {
-  document.querySelectorAll('.mp-nav-item').forEach(i => {
-    i.classList.toggle('active', i.dataset.nav === pantalla);
-  });
+function actualizarNav(p) {
+  document.querySelectorAll('.mp-nav-item').forEach(i => i.classList.toggle('active', i.dataset.nav === p));
 }
 function progreso(n) {
-  document.querySelectorAll('#progreso span').forEach((b, i) => {
-    b.className = i < n ? 'hecho' : (i === n ? 'activo' : '');
-  });
+  document.querySelectorAll('#progreso span').forEach((b, i) => { b.className = i < n ? 'hecho' : (i === n ? 'activo' : ''); });
 }
-function setHeaderSaludo(txt) { document.getElementById('mpGreeting').textContent = txt; }
 
 // ==================== ESTADO ====================
 let sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null,
   nombre:'', apellido:'', dni:'', email:'', telefono:'', saldos:{ars:0,usd:0}, destino:null };
 let cotizacion = { compra:1150, venta:1230 };
 let modoDolar = 'compra';
+let stream = null;
+let qrScanner = null;
+let verazActual = null;
+let tiposPrestamo = [];
+let tipoSeleccionado = null;
+let idPrestamoActual = null;
+let tiposPF = [];
+let tipoPFSeleccionado = null;
 
-// ==================== LLAMADAS BACKEND ====================
+// ==================== BACKEND ====================
 async function llamarBackend(action, params = {}) {
-  if (!APPS_SCRIPT_URL) { log('(Modo local)', 'info'); return { ok:true, local:true }; }
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'TU_URL_AQUI') { log('(Modo local: sin backend)', 'info'); return { ok:true, local:true }; }
   const query = new URLSearchParams({ action, ...params }).toString();
   log('GET ?action=' + action, 'req');
   try {
@@ -572,92 +608,54 @@ async function paso1() {
   const tel = document.getElementById('telefono').value.trim();
   const msg = document.getElementById('msg1'); msg.innerHTML = '';
   log('POST /api/registro', 'req');
-  log(`  Body: { email:"${email}", telefono:"${tel}" }`);
-
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    log('→ Email inválido ❌', 'err');
-    msg.innerHTML = '<div class="error">Formato de email inválido.</div>'; return;
-  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { log('→ Email inválido ❌', 'err'); msg.innerHTML = '<div class="error">Formato de email inválido.</div>'; return; }
   log('→ Email ✅');
-  if (tel.replace(/\D/g,'').length < 10) {
-    log('→ Teléfono inválido ❌', 'err');
-    msg.innerHTML = '<div class="error">Teléfono inválido. 10 dígitos.</div>'; return;
-  }
+  if (tel.replace(/\D/g,'').length < 10) { log('→ Teléfono inválido ❌', 'err'); msg.innerHTML = '<div class="error">Teléfono inválido.</div>'; return; }
   log('→ Teléfono ✅');
-
   const check = await llamarBackend('checkEmail', { email });
-  if (check && check.existe) {
-    log('→ Email ya registrado ❌', 'err');
-    msg.innerHTML = '<div class="error">Ya existe una cuenta con ese email.</div>'; return;
-  }
-  log('→ Sin duplicados ✅');
-
+  if (check && check.existe) { log('→ Ya registrado ❌', 'err'); msg.innerHTML = '<div class="error">Ya existe una cuenta con ese email.</div>'; return; }
   sesion.userId = 'usr_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   sesion.otp = String(Math.floor(100000 + Math.random() * 900000));
   sesion.email = email; sesion.telefono = tel;
-
   log(`→ INSERT usuarios ("${sesion.userId}")`, 'ok');
-  log(`→ Generando OTP: ${sesion.otp}`, 'info');
+  log(`→ OTP: ${sesion.otp}`, 'info');
   log(`📨 SMS a ${tel}: "Tu código es ${sesion.otp}."`, 'info');
   await llamarBackend('guardarLogOtp', { userId:sesion.userId, email, telefono:tel, codigo:sesion.otp });
-
   msg.innerHTML = '<div class="exito">Registro iniciado. Mirá el SMS 👉</div>';
   progreso(1); setTimeout(() => mostrar('p2'), 700);
 }
-
-// ==================== PASO 2 ====================
 function paso2() {
   const codigo = document.getElementById('otp').value.trim();
   const msg = document.getElementById('msg2'); msg.innerHTML = '';
   log('POST /api/otp/verificar', 'req');
-  if (codigo !== sesion.otp) {
-    log('→ OTP incorrecto ❌', 'err');
-    msg.innerHTML = '<div class="error">Código incorrecto.</div>'; return;
-  }
-  log('→ OTP coincide ✅');
-  msg.innerHTML = '<div class="exito">¡Teléfono verificado!</div>';
+  if (codigo !== sesion.otp) { log('→ OTP incorrecto ❌', 'err'); msg.innerHTML = '<div class="error">Código incorrecto.</div>'; return; }
+  log('→ OTP ✅');
+  msg.innerHTML = '<div class="exito">¡Verificado!</div>';
   progreso(2); setTimeout(() => mostrar('p3'), 700);
 }
-
-// ==================== PASO 3 ====================
 async function paso3() {
   const nombre = document.getElementById('nombre').value.trim().toUpperCase();
   const apellido = document.getElementById('apellido').value.trim().toUpperCase();
   const dni = document.getElementById('dni').value.trim();
   const msg = document.getElementById('msg3'); msg.innerHTML = '';
-  log('POST /api/renaper/validar', 'req');
-  log(`  Body: { dni:"${dni}", nombre:"${nombre}", apellido:"${apellido}" }`);
-
-  if (!/^\d{7,8}$/.test(dni)) {
-    log('→ DNI inválido ❌', 'err');
-    msg.innerHTML = '<div class="error">DNI: 7 u 8 dígitos.</div>'; return;
-  }
+  log('POST /api/renaper', 'req');
+  if (!/^\d{7,8}$/.test(dni)) { log('→ DNI inválido ❌', 'err'); msg.innerHTML = '<div class="error">DNI: 7 u 8 dígitos.</div>'; return; }
   const r = await llamarBackend('renaper', { dni });
   if (r && r.ok && r.persona) {
-    log(`← ${r.persona.nombre} ${r.persona.apellido}`, 'ok');
-    if (r.persona.nombre !== nombre || r.persona.apellido !== apellido) {
-      log('→ No coinciden ❌', 'err');
-      msg.innerHTML = '<div class="error">Los datos no coinciden con RENAPER.</div>'; return;
-    }
-  } else if (r && !r.local) {
-    log('← DNI no encontrado', 'err');
-    msg.innerHTML = '<div class="error">DNI no encontrado en RENAPER.</div>'; return;
-  }
-  log('→ Datos validados ✅');
+    if (r.persona.nombre !== nombre || r.persona.apellido !== apellido) { log('→ No coinciden ❌', 'err'); msg.innerHTML = '<div class="error">Los datos no coinciden con RENAPER.</div>'; return; }
+  } else if (r && !r.local) { log('← DNI no encontrado', 'err'); msg.innerHTML = '<div class="error">DNI no encontrado en RENAPER.</div>'; return; }
+  log('→ Validado ✅');
   sesion.nombre = nombre; sesion.apellido = apellido; sesion.dni = dni;
   msg.innerHTML = '<div class="exito">Validado con RENAPER.</div>';
   progreso(3); setTimeout(() => mostrar('p4'), 700);
 }
-
-// ==================== PASO 4 ====================
-let stream = null;
 async function iniciarCamara() {
   const box = document.getElementById('camaraBox');
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'user' } });
     box.innerHTML = '';
-    const v = document.createElement('video'); v.autoplay = true; v.playsInline = true;
-    v.srcObject = stream; box.appendChild(v);
+    const v = document.createElement('video'); v.autoplay = true; v.playsInline = true; v.srcObject = stream;
+    box.appendChild(v);
     document.getElementById('btnCamara').style.display = 'none';
     document.getElementById('btnCapturar').style.display = 'block';
     log('📷 Cámara activada', 'info');
@@ -667,9 +665,9 @@ async function iniciarCamara() {
     const ctx = c.getContext('2d');
     const g = ctx.createLinearGradient(0,0,200,200); g.addColorStop(0,'#009ee3'); g.addColorStop(1,'#00a650');
     ctx.fillStyle = g; ctx.fillRect(0,0,200,200);
-    ctx.fillStyle = 'white'; ctx.font = 'bold 80px sans-serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('👤', 100, 100);
-    sesion.selfieBase64 = c.toDataURL('image/jpeg', 0.6);
+    ctx.fillStyle = 'white'; ctx.font = 'bold 80px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('👤', 100, 100);
+    sesion.selfieBase64 = c.toDataURL('image/jpeg', .6);
     box.innerHTML = '✅';
     document.getElementById('btnCamara').style.display = 'none';
     document.getElementById('btnCapturar').style.display = 'block';
@@ -679,55 +677,36 @@ async function capturarSelfie() {
   const msg = document.getElementById('msg4'); msg.innerHTML = '';
   if (!sesion.selfieBase64) {
     const v = document.querySelector('#camaraBox video');
-    if (v) {
-      const c = document.createElement('canvas'); c.width = c.height = 320;
-      c.getContext('2d').drawImage(v, 0, 0, 320, 320);
-      sesion.selfieBase64 = c.toDataURL('image/jpeg', 0.7);
-    }
+    if (v) { const c = document.createElement('canvas'); c.width = c.height = 320; c.getContext('2d').drawImage(v,0,0,320,320); sesion.selfieBase64 = c.toDataURL('image/jpeg', .7); }
   }
   if (stream) stream.getTracks().forEach(t => t.stop());
-  log('POST /api/verificacion/selfie', 'req');
-  log('→ Prueba de vida...');
+  log('POST /api/selfie', 'req');
   const score = 85 + Math.floor(Math.random() * 14);
   log(`  Score facial: ${score}/100`, 'ok');
-  await llamarBackend('guardarSelfie', { userId:sesion.userId, dni:sesion.dni,
-    base64: sesion.selfieBase64.substring(0, 8000), score });
-  log('← 200 OK', 'ok');
+  await llamarBackend('guardarSelfie', { userId:sesion.userId, dni:sesion.dni, base64: sesion.selfieBase64.substring(0, 8000), score });
   msg.innerHTML = `<div class="exito">Identidad verificada (${score}/100).</div>`;
   progreso(4); setTimeout(() => mostrar('p5'), 900);
 }
-
-// ==================== PASO 5 ====================
 async function paso5() {
   const msg = document.getElementById('msg5'); msg.innerHTML = '';
-  log('POST /api/seguridad/verificar', 'req');
-  log('→ Consultando listas PEP (UIF)...');
-  const r = await llamarBackend('verificarSeguridad', {
-    nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni });
+  log('POST /api/seguridad', 'req');
+  const r = await llamarBackend('verificarSeguridad', { nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni });
   if (r && r.enLista) {
+    const txt = r.tipo === 'SANCION' ? 'Tu cuenta no puede ser abierta por normativa internacional.' : 'Tu solicitud será revisada por un analista. Te contactaremos en 48 hs.';
     log('  ⚠️ COINCIDENCIA', 'err');
-    msg.innerHTML = '<div class="error">Tu solicitud será revisada por un analista.</div>'; return;
+    msg.innerHTML = `<div class="error">${txt}</div>`; return;
   }
   log('→ Sin coincidencias ✅');
   msg.innerHTML = '<div class="exito">Sin coincidencias en listas de riesgo.</div>';
   progreso(5); setTimeout(() => mostrar('p6'), 900);
 }
-
-// ==================== PASO 6 ====================
 async function paso6() {
   const pin = document.getElementById('pin').value.trim();
   const msg = document.getElementById('msg6'); msg.innerHTML = '';
   log('POST /api/pin/crear', 'req');
-  if (!/^\d{6}$/.test(pin)) {
-    log('→ PIN: 6 dígitos ❌', 'err');
-    msg.innerHTML = '<div class="error">El PIN debe tener 6 dígitos.</div>'; return;
-  }
-  if (['123456','000000','111111','654321','121212'].includes(pin)) {
-    log('→ PIN débil ❌', 'err');
-    msg.innerHTML = '<div class="error">PIN muy fácil. Elegí otro.</div>'; return;
-  }
+  if (!/^\d{6}$/.test(pin)) { log('→ PIN: 6 dígitos ❌', 'err'); msg.innerHTML = '<div class="error">El PIN debe tener 6 dígitos.</div>'; return; }
+  if (['123456','000000','111111','654321','121212'].includes(pin)) { log('→ PIN débil ❌', 'err'); msg.innerHTML = '<div class="error">PIN muy fácil. Elegí otro.</div>'; return; }
   log('→ PIN válido ✅');
-  log('→ Generando salt + hash SHA-256...');
   const hash = await sha256(pin + 'salt_' + sesion.userId);
   log('  Hash: ' + hash.substring(0, 24) + '...', 'info');
   log('→ NUNCA se guarda el PIN en claro 🔒', 'ok');
@@ -740,50 +719,37 @@ async function sha256(s) {
   const h = await crypto.subtle.digest('SHA-256', b);
   return Array.from(new Uint8Array(h)).map(x => x.toString(16).padStart(2,'0')).join('');
 }
-
-// ==================== PASO 7 ====================
 async function generarCuenta() {
   const dni = sesion.dni;
   const b1 = '00000001', b2 = dni.padStart(8,'0') + '000001';
   const dv1 = (parseInt(b1.substring(0,7)) % 9 + 1);
   const dv2 = (parseInt(b2.substring(0,6)) % 9 + 1);
   sesion.cvu = b1.substring(0,7) + dv1 + b2.substring(0,13) + dv2;
-  sesion.alias = sesion.nombre.toLowerCase().replace(/\s/g,'') + '.' +
-                 sesion.apellido.toLowerCase().replace(/\s/g,'') + '.mp';
+  sesion.alias = sesion.nombre.toLowerCase().replace(/\s/g,'') + '.' + sesion.apellido.toLowerCase().replace(/\s/g,'') + '.mp';
   log('POST /api/cuenta/crear', 'req');
   log(`→ CVU: ${sesion.cvu}`, 'ok');
   log(`→ Alias: ${sesion.alias}`, 'ok');
-  log('→ INSERT ledger (saldo $0 ARS)');
-  await llamarBackend('crearCuenta', { userId:sesion.userId, email:sesion.email,
-    telefono:sesion.telefono, nombre:sesion.nombre, apellido:sesion.apellido,
-    dni:sesion.dni, cvu:sesion.cvu, alias:sesion.alias, pinHash:sesion.pinHash });
-  log('← 201 Created', 'ok');
+  await llamarBackend('crearCuenta', { userId:sesion.userId, email:sesion.email, telefono:sesion.telefono,
+    nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni, cvu:sesion.cvu, alias:sesion.alias, pinHash:sesion.pinHash||'' });
   document.getElementById('datosCuenta').innerHTML =
-    `<strong>CVU:</strong> ${sesion.cvu}<br>
-     <strong>Alias:</strong> ${sesion.alias}<br>
-     <strong>Titular:</strong> ${sesion.nombre} ${sesion.apellido}<br>
-     <strong>Saldo:</strong> $0,00 ARS`;
+    `<strong>CVU:</strong> ${sesion.cvu}<br><strong>Alias:</strong> ${sesion.alias}<br>
+     <strong>Titular:</strong> ${sesion.nombre} ${sesion.apellido}<br><strong>Saldo:</strong> $0,00 ARS`;
   progreso(7);
 }
 async function paso7() {
   log('POST /api/dispositivo/vincular', 'req');
   const deviceId = 'dev_' + Math.random().toString(36).slice(2,12);
-  log(`→ deviceId: ${deviceId}`);
   await llamarBackend('vincularDispositivo', { userId:sesion.userId, deviceId });
-  log('→ UPDATE usuarios SET estado = "ACTIVO"', 'ok');
-  log('← 200 OK', 'ok');
-  log('', 'info');
+  log('→ UPDATE usuarios estado="ACTIVO"', 'ok');
   log('══════════ ✅ ONBOARDING COMPLETO ══════════', 'ok');
   progreso(8);
-  setTimeout(() => { irADashboard(); }, 700);
+  setTimeout(() => irADashboard(), 700);
 }
 
-// ============================================================
-// ============ MÓDULO DE TRANSFERENCIAS ======================
-// ============================================================
+// ==================== DASHBOARD ====================
 async function irADashboard() {
   mostrar('p9');
-  setHeaderSaludo('Hola, ' + (sesion.nombre || '').split(' ')[0] || '👋');
+  document.getElementById('mpGreeting').textContent = 'Hola, ' + (sesion.nombre || '👋');
   await actualizarSaldos();
 }
 async function actualizarSaldos() {
@@ -797,33 +763,36 @@ async function actualizarSaldos() {
   document.getElementById('saldoUsdDash').textContent = fmtUsd;
   document.getElementById('saldoArsBig').textContent = fmtArs;
   document.getElementById('saldoUsdBig').textContent = fmtUsd;
-  // Últimos movimientos
   await cargarUltimosMovs();
 }
 async function cargarUltimosMovs() {
-  const r = await llamarBackend('obtenerHistorial', { userId: sesion.userId });
+  const r = await llamarBackend('obtenerHistorialCompleto', { userId: sesion.userId });
   const cont = document.getElementById('ultimosMovs');
   if (!r.ok || !r.movimientos || r.movimientos.length === 0) {
-    cont.innerHTML = '<div style="text-align:center;color:#888;font-size:0.78rem;padding:10px">Sin movimientos todavía</div>';
+    cont.innerHTML = '<div style="text-align:center;color:#888;font-size:.78rem;padding:10px">Sin movimientos todavía</div>';
     return;
   }
-  cont.innerHTML = r.movimientos.slice(0, 4).map(m => {
+  cont.innerHTML = r.movimientos.slice(0,4).map(m => {
     const pos = m.monto >= 0;
-    const cls = pos ? 'pos' : 'neg';
-    const sig = pos ? '+' : '';
     return `<div class="mp-row">
-      <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${pos?'↓':'↑'}</span>
-        <div style="font-size:0.78rem">
+      <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${m.icono||(pos?'↓':'↑')}</span>
+        <div style="font-size:.78rem">
           <div style="font-weight:600">${m.tipo}</div>
-          <div style="color:#888;font-size:0.68rem">${m.contraparte}</div>
+          <div style="color:#888;font-size:.68rem">${m.contraparte}</div>
         </div>
       </div>
-      <div class="right ${cls}">${sig}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
+      <div class="right ${pos?'pos':'neg'}">${pos?'+':''}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
     </div>`;
   }).join('');
 }
-
 async function irADinero() { mostrar('p14'); await actualizarSaldos(); }
+async function cargarSaldo() {
+  log('POST /api/ledger/cargarPrueba', 'req');
+  const r = await llamarBackend('cargarSaldoPrueba', { userId: sesion.userId, monto: 10000 });
+  if (r.ok) { log('← +$10.000', 'ok'); await actualizarSaldos(); }
+}
+
+// ==================== TRANSFERENCIAS ====================
 function irATransferir() {
   document.getElementById('destino').value = '';
   document.getElementById('msg10').innerHTML = '';
@@ -833,19 +802,13 @@ async function buscarDestino() {
   const q = document.getElementById('destino').value.trim();
   const msg = document.getElementById('msg10'); msg.innerHTML = '';
   log('POST /api/transferencia/buscar', 'req');
-  log(`  Body: { q:"${q}" }`);
   if (!q) { msg.innerHTML = '<div class="error">Ingresá un dato.</div>'; return; }
   const r = await llamarBackend('buscarDestinatario', { q, origenUserId: sesion.userId });
-  if (!r.ok) {
-    log('← ' + r.error, 'err');
-    msg.innerHTML = `<div class="error">${r.error}</div>`; return;
-  }
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   sesion.destino = r.destinatario;
-  log(`← OK ${r.destinatario.nombre} ${r.destinatario.apellido}`, 'ok');
   document.getElementById('datosDestino').innerHTML =
     `<strong>Destinatario:</strong> ${r.destinatario.nombre} ${r.destinatario.apellido}<br>
-     <strong>CVU:</strong> ${r.destinatario.cvu}<br>
-     <strong>Alias:</strong> ${r.destinatario.alias}`;
+     <strong>CVU:</strong> ${r.destinatario.cvu}<br><strong>Alias:</strong> ${r.destinatario.alias}`;
   mostrar('p11');
 }
 async function confirmarTransferencia() {
@@ -853,91 +816,68 @@ async function confirmarTransferencia() {
   const concepto = document.getElementById('concepto').value.trim() || 'Transferencia';
   const msg = document.getElementById('msg11'); msg.innerHTML = '';
   log('POST /api/transferencia/ejecutar', 'req');
-  log('→ LockService: adquiriendo lock...');
-  if (!monto || monto <= 0) {
-    msg.innerHTML = '<div class="error">Monto debe ser > 0.</div>'; return;
-  }
-  if (monto > sesion.saldos.ars) {
-    log('→ Saldo insuficiente ❌', 'err');
-    msg.innerHTML = `<div class="error">Saldo insuficiente. Tenés $${sesion.saldos.ars.toLocaleString('es-AR')}.</div>`; return;
-  }
-  const r = await llamarBackend('realizarTransferencia', {
-    origenUserId: sesion.userId, destinoCvu: sesion.destino.cvu, monto, concepto });
-  if (!r.ok) {
-    log('← ' + r.error, 'err');
-    msg.innerHTML = `<div class="error">${r.error}</div>`; return;
-  }
-  log('→ Débito + crédito aplicados', 'ok');
-  log('← 200 OK id=' + r.idOperacion, 'ok');
+  if (!monto || monto <= 0) { msg.innerHTML = '<div class="error">Monto > 0.</div>'; return; }
+  if (monto > sesion.saldos.ars) { log('→ Saldo insuficiente ❌', 'err'); msg.innerHTML = `<div class="error">Saldo insuficiente. Tenés $${sesion.saldos.ars.toLocaleString('es-AR')}.</div>`; return; }
+  const r = await llamarBackend('realizarTransferencia', { origenUserId: sesion.userId, destinoCvu: sesion.destino.cvu, monto, concepto });
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
   const c = r.comprobante;
   document.getElementById('comprobante').innerHTML = `
-    <div style="text-align:center;margin-bottom:10px">
-      <div style="font-size:0.68rem;opacity:0.8">Comprobante</div>
-      <div style="font-weight:700">${r.idOperacion}</div>
-    </div>
-    <strong>Fecha:</strong> ${new Date(c.fecha).toLocaleString('es-AR')}<br>
-    <strong>De:</strong> ${c.origen}<br>
-    <strong>Para:</strong> ${c.destino}<br>
-    <strong>Alias:</strong> ${c.destinoAlias}<br>
+    <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Comprobante</div>
+    <div style="font-weight:700">${r.idOperacion}</div></div>
+    <strong>De:</strong> ${c.origen}<br><strong>Para:</strong> ${c.destino}<br>
     <strong>Monto:</strong> $${Number(c.monto).toLocaleString('es-AR', {minimumFractionDigits:2})}<br>
     <strong>Concepto:</strong> ${c.concepto}<br>
-    <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR', {minimumFractionDigits:2})}
-  `;
+    <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR', {minimumFractionDigits:2})}`;
   mostrar('p12');
 }
 async function verHistorial() {
-  log('POST /api/transferencia/historial', 'req');
-  const r = await llamarBackend('obtenerHistorial', { userId: sesion.userId });
+  const r = await llamarBackend('obtenerHistorialCompleto', { userId: sesion.userId });
   const cont = document.getElementById('listaHistorial');
   if (!r.ok || !r.movimientos || r.movimientos.length === 0) {
     cont.innerHTML = '<div class="info">Sin movimientos.</div>';
-    mostrar('p13'); actualizarNav('p13'); return;
+    mostrar('p13'); return;
   }
   cont.innerHTML = r.movimientos.map(m => {
     const pos = m.monto >= 0;
-    const cls = pos ? 'pos' : 'neg';
-    const sig = pos ? '+' : '';
     return `<div class="mp-row">
-      <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${pos?'↓':'↑'}</span>
-        <div style="font-size:0.75rem">
+      <div class="left"><span class="avatar" style="background:${pos?'#00a650':'#d32f2f'}">${m.icono||(pos?'↓':'↑')}</span>
+        <div style="font-size:.75rem">
           <div style="font-weight:600">${m.tipo}</div>
-          <div style="color:#888;font-size:0.65rem">${m.contraparte} · ${new Date(m.fecha).toLocaleDateString('es-AR')}</div>
+          <div style="color:#888;font-size:.65rem">${m.contraparte} · ${new Date(m.fecha).toLocaleDateString('es-AR')}</div>
         </div>
       </div>
-      <div class="right ${cls}">${sig}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
+      <div class="right ${pos?'pos':'neg'}">${pos?'+':''}$${Math.abs(m.monto).toLocaleString('es-AR')}</div>
     </div>`;
   }).join('');
-  mostrar('p13'); actualizarNav('p13');
-}
-async function cargarSaldo() {
-  log('POST /api/ledger/cargarPrueba', 'req');
-  log('  ⚠️ Acción solo para simulación', 'info');
-  const r = await llamarBackend('cargarSaldoPrueba', { userId: sesion.userId, monto: 10000 });
-  if (r.ok) {
-    log('← +$10.000 acreditados', 'ok');
-    await actualizarSaldos();
-  }
+  mostrar('p13');
 }
 
-// ============================================================
-// ================== MÓDULO DE DÓLAR =========================
-// ============================================================
+// ==================== DÓLAR ====================
 async function irADolar() {
-  mostrar('p15'); actualizarNav('p15');
+  mostrar('p15');
   document.getElementById('msgDolar').innerHTML = '';
-  await cargarCotizacion();
-  await actualizarSaldos();
+  await cargarCotizacion(); await actualizarSaldos(); await cargarTopeMensual();
 }
 async function cargarCotizacion() {
-  log('POST /api/dolar/cotizacion', 'req');
   const r = await llamarBackend('obtenerCotizacion');
   if (r.ok) {
     cotizacion = r.cotizacion;
     document.getElementById('cotCompra').textContent = '$' + cotizacion.compra.toLocaleString('es-AR');
     document.getElementById('cotVenta').textContent = '$' + cotizacion.venta.toLocaleString('es-AR');
     document.getElementById('cotFuente').textContent = cotizacion.fuente || 'MEP';
-    log(`← Compra: $${cotizacion.compra} · Venta: $${cotizacion.venta}`, 'ok');
   }
+}
+async function cargarTopeMensual() {
+  const r = await llamarBackend('obtenerTopeMensual', { userId: sesion.userId });
+  if (!r.ok) return;
+  const pct = Math.min(100, (r.consumido / r.tope) * 100);
+  const fill = document.getElementById('topeFill');
+  fill.style.width = pct + '%';
+  fill.className = 'fill' + (pct >= 100 ? ' danger' : (pct >= 70 ? ' warn' : ''));
+  document.getElementById('topeTexto').textContent = 'US$ ' + r.consumido.toLocaleString('es-AR') + ' / ' + r.tope;
+  document.getElementById('topeInfo').innerHTML = r.disponible > 0
+    ? `Te quedan <b>US$ ${r.disponible.toLocaleString('es-AR')}</b> este mes.`
+    : '🚫 Alcanzaste el tope mensual.';
 }
 function setModoDolar(modo) {
   modoDolar = modo;
@@ -949,77 +889,451 @@ function setModoDolar(modo) {
 function calcCompra() {
   const usd = Number(document.getElementById('usdCompra').value) || 0;
   const ars = Math.round(usd * cotizacion.venta * 100) / 100;
-  document.getElementById('calcCompraInfo').innerHTML =
-    `Vas a pagar <b>$${ars.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> ` +
-    `por <b>US$ ${usd.toLocaleString('es-AR')}</b> (cotización venta $${cotizacion.venta})`;
+  document.getElementById('calcCompraInfo').innerHTML = `Vas a pagar <b>$${ars.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> por <b>US$ ${usd.toLocaleString('es-AR')}</b>`;
 }
 function calcVenta() {
   const usd = Number(document.getElementById('usdVenta').value) || 0;
   const ars = Math.round(usd * cotizacion.compra * 100) / 100;
-  document.getElementById('calcVentaInfo').innerHTML =
-    `Vas a recibir <b>$${ars.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> ` +
-    `por <b>US$ ${usd.toLocaleString('es-AR')}</b> (cotización compra $${cotizacion.compra})`;
+  document.getElementById('calcVentaInfo').innerHTML = `Vas a recibir <b>$${ars.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> por <b>US$ ${usd.toLocaleString('es-AR')}</b>`;
 }
 async function confirmarCompraDolar() {
   const usd = Number(document.getElementById('usdCompra').value);
   const msg = document.getElementById('msgDolar'); msg.innerHTML = '';
   log('POST /api/dolar/comprar', 'req');
-  log(`  Body: { montoUsd: ${usd} }`);
-  if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Ingresá un monto válido.</div>'; return; }
-  if (usd > 5000) { msg.innerHTML = '<div class="error">Tope: US$ 5.000 por operación.</div>'; return; }
-  log('→ LockService adquirido');
-  log(`→ Debitando ARS...`);
-  log(`→ Acreditando USD a cotización ${cotizacion.venta}`);
+  if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Monto inválido.</div>'; return; }
   const r = await llamarBackend('comprarDolares', { userId: sesion.userId, montoUsd: usd });
-  if (!r.ok) {
-    log('← ' + r.error, 'err');
-    msg.innerHTML = `<div class="error">${r.error}</div>`; return;
-  }
-  log(`← 200 OK { id: "${r.idOperacion}" }`, 'ok');
-  msg.innerHTML = `<div class="exito">✅ Compra confirmada<br>
-    Compraste <b>US$ ${r.montoUsd}</b> por <b>$${r.montoArs.toLocaleString('es-AR')}</b><br>
-    ID: ${r.idOperacion}</div>`;
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  const t = r.topeMensual;
+  msg.innerHTML = `<div class="exito">✅ Compra confirmada<br>Compraste <b>US$ ${r.montoUsd}</b> por <b>$${r.montoArs.toLocaleString('es-AR')}</b><br>
+    <span style="font-size:.72rem">Tope: US$ ${t.consumido}/${t.tope} · Quedan US$ ${t.disponible.toFixed(2)}</span></div>`;
   document.getElementById('usdCompra').value = '';
-  await actualizarSaldos(); calcCompra();
+  await actualizarSaldos(); await cargarTopeMensual(); calcCompra();
 }
 async function confirmarVentaDolar() {
   const usd = Number(document.getElementById('usdVenta').value);
   const msg = document.getElementById('msgDolar'); msg.innerHTML = '';
   log('POST /api/dolar/vender', 'req');
-  log(`  Body: { montoUsd: ${usd} }`);
-  if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Ingresá un monto válido.</div>'; return; }
-  if (usd > 5000) { msg.innerHTML = '<div class="error">Tope: US$ 5.000 por operación.</div>'; return; }
-  log('→ LockService adquirido');
-  log(`→ Debitando USD...`);
-  log(`→ Acreditando ARS a cotización ${cotizacion.compra}`);
+  if (!usd || usd <= 0) { msg.innerHTML = '<div class="error">Monto inválido.</div>'; return; }
   const r = await llamarBackend('venderDolares', { userId: sesion.userId, montoUsd: usd });
-  if (!r.ok) {
-    log('← ' + r.error, 'err');
-    msg.innerHTML = `<div class="error">${r.error}</div>`; return;
-  }
-  log(`← 200 OK { id: "${r.idOperacion}" }`, 'ok');
-  msg.innerHTML = `<div class="exito">✅ Venta confirmada<br>
-    Vendiste <b>US$ ${r.montoUsd}</b> y recibiste <b>$${r.montoArs.toLocaleString('es-AR')}</b><br>
-    ID: ${r.idOperacion}</div>`;
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  msg.innerHTML = `<div class="exito">✅ Venta confirmada<br>Vendiste <b>US$ ${r.montoUsd}</b> y recibiste <b>$${r.montoArs.toLocaleString('es-AR')}</b></div>`;
   document.getElementById('usdVenta').value = '';
   await actualizarSaldos(); calcVenta();
 }
 
-// ==================== REINICIAR ====================
+// ==================== QR ====================
+function irAMiQR() {
+  mostrar('p16');
+  document.getElementById('qrAliasNombre').textContent = sesion.nombre + ' ' + sesion.apellido;
+  document.getElementById('qrAliasCvu').textContent = 'Alias: ' + sesion.alias + ' · CVU: ' + sesion.cvu;
+  const cont = document.getElementById('qrContainer'); cont.innerHTML = '';
+  const data = 'simubilletera://pagar?alias=' + encodeURIComponent(sesion.alias) + '&cvu=' + encodeURIComponent(sesion.cvu);
+  try {
+    new QRCode(cont, { text: data, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
+    log('POST /api/qr/generar', 'req');
+    log('→ QR generado ' + sesion.alias, 'ok');
+  } catch(e) { log('Error QR: ' + e.message, 'err'); }
+}
+function irAEscanearQR() {
+  mostrar('p17');
+  document.getElementById('msgQR').innerHTML = '';
+  const reader = document.getElementById('qrReader'); reader.innerHTML = '';
+  qrScanner = new Html5Qrcode('qrReader');
+  log('POST /api/qr/escanear', 'req');
+  qrScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 250, height: 250 } },
+    (decodedText) => {
+      log('← QR leído', 'ok');
+      detenerEscaner();
+      let alias = null;
+      try {
+        const m = decodedText.match(/alias=([^&]+)/);
+        if (m) alias = decodeURIComponent(m[1]);
+        else if (decodedText.startsWith('http')) { const u = new URL(decodedText); alias = u.searchParams.get('alias'); }
+        else alias = decodedText.trim();
+      } catch(e) { alias = decodedText.trim(); }
+      if (!alias) { document.getElementById('msgQR').innerHTML = '<div class="error">QR inválido.</div>'; return; }
+      document.getElementById('destino').value = alias;
+      document.getElementById('msgQR').innerHTML = '<div class="exito">✅ Alias: <b>' + alias + '</b></div>';
+      setTimeout(() => buscarDestino(), 600);
+    },
+    () => {}
+  ).catch(err => {
+    log('⚠️ Error cámara: ' + err.message, 'err');
+    document.getElementById('msgQR').innerHTML = '<div class="error">No se pudo acceder a la cámara.</div>';
+  });
+}
+function detenerEscaner() {
+  if (qrScanner) qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; }).catch(() => { qrScanner = null; });
+}
+
+// ==================== SERVICIOS ====================
+async function irAServicios() { mostrar('p18'); await cargarFacturas(); }
+async function cargarFacturas() {
+  const r = await llamarBackend('obtenerFacturasPendientes', { userId: sesion.userId });
+  const cont = document.getElementById('listaFacturas');
+  const totalEl = document.getElementById('totalPendientes');
+  if (!r.ok || !r.facturas || r.facturas.length === 0) {
+    totalEl.textContent = 'Sin facturas pendientes';
+    cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
+      <div style="font-size:2.5rem">🧾</div>
+      <div style="color:#666;font-size:.85rem;margin-top:8px">No tenés facturas pendientes.<br>
+      <span style="font-size:.75rem">Tocá "Generar" para simular</span></div></div>`;
+    return;
+  }
+  const total = r.facturas.reduce((s, f) => s + f.monto, 0);
+  totalEl.textContent = `${r.facturas.length} facturas · Total $${total.toLocaleString('es-AR')}`;
+  cont.innerHTML = r.facturas.map(f => {
+    const venc = new Date(f.vencimiento).toLocaleDateString('es-AR');
+    const vencido = new Date(f.vencimiento) < new Date();
+    return `<div class="factura-card">
+      <div class="logo">${f.logo}</div>
+      <div class="info">
+        <div class="emp">${f.empresa}</div>
+        <div class="det">${f.categoria} · ${f.periodo}</div>
+        <div class="det" style="color:${vencido ? '#dc2626' : '#888'}">Vence: ${venc}${vencido ? ' ⚠️' : ''}</div>
+      </div>
+      <div class="monto">$${f.monto.toLocaleString('es-AR')}
+        <button onclick="confirmarPago('${f.id}','${f.empresa}',${f.monto})">Pagar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function generarFacturasDemo() {
+  const r = await llamarBackend('generarFacturasDemo', { userId: sesion.userId });
+  if (r.ok) await cargarFacturas();
+}
+async function confirmarPago(id, empresa, monto) {
+  if (!confirm(`¿Pagar $${monto.toLocaleString('es-AR')} a ${empresa}?`)) return;
+  const r = await llamarBackend('pagarFactura', { userId: sesion.userId, facturaId: id });
+  if (!r.ok) { alert(r.error); return; }
+  const c = r.comprobante;
+  document.getElementById('comprobantePago').innerHTML = `
+    <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Comprobante</div>
+    <div style="font-weight:700">${r.idOperacion}</div></div>
+    <strong>Empresa:</strong> ${c.empresa}<br><strong>Período:</strong> ${c.periodo}<br>
+    <strong>Monto:</strong> $${Number(c.monto).toLocaleString('es-AR', {minimumFractionDigits:2})}<br>
+    <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR', {minimumFractionDigits:2})}`;
+  mostrar('p19');
+  await actualizarSaldos();
+}
+
+// ==================== PRÉSTAMOS ====================
+async function irAPrestamos() { mostrar('p20'); await cargarPrestamos(); }
+async function cargarPrestamos() {
+  const r = await llamarBackend('listarPrestamos', { userId: sesion.userId });
+  const cont = document.getElementById('listaPrestamos');
+  const totalEl = document.getElementById('totalPrestamos');
+  if (!r.ok || !r.prestamos || r.prestamos.length === 0) {
+    totalEl.textContent = 'Sin préstamos';
+    cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
+      <div style="font-size:2.5rem">💳</div>
+      <div style="color:#666;font-size:.85rem;margin-top:8px">Sin préstamos activos.<br>
+      <span style="font-size:.75rem">Tocá "+ Solicitar"</span></div></div>`;
+    return;
+  }
+  const activos = r.prestamos.filter(p => p.estado === 'ACTIVO').length;
+  totalEl.textContent = `${r.prestamos.length} en total · ${activos} activos`;
+  cont.innerHTML = r.prestamos.map(p => {
+    const fecha = new Date(p.fecha).toLocaleDateString('es-AR');
+    return `<div class="prestamo-item" onclick="verCuotas('${p.id}')" style="cursor:pointer">
+      <div class="head"><div class="tipo">${p.tipoNombre}</div>
+      <div class="estado ${p.estado}">${p.estado}</div></div>
+      <div class="info">Monto: <b>$${p.monto.toLocaleString('es-AR')}</b> · TNA: <b>${p.tna}%</b> · ${p.meses} cuotas de <b>$${p.cuota.toLocaleString('es-AR')}</b></div>
+      <div class="info">Total: <b>$${p.total.toLocaleString('es-AR')}</b> · Interés: <b>$${p.interes.toLocaleString('es-AR')}</b></div>
+      <div class="info" style="color:#888;font-size:.68rem">${fecha} · Pagadas: ${p.cuotasPagadas}/${p.meses}
+        <span style="float:right;color:#009ee3;font-weight:600">Ver cuotas →</span></div>
+    </div>`;
+  }).join('');
+}
+async function nuevoPrestamo() {
+  mostrar('p21');
+  const rv = await llamarBackend('consultarVeraz', { userId: sesion.userId });
+  if (!rv.ok) { alert(rv.error); return; }
+  verazActual = rv.veraz;
+  log(`← Veraz cat ${verazActual.categoria} (${verazActual.etiqueta})`, 'ok');
+  const pct = (6 - verazActual.categoria + 1) / 6 * 100;
+  document.getElementById('verazBox').innerHTML = `
+    <div class="veraz-card" style="background:linear-gradient(135deg,${verazActual.color},${verazActual.color}dd)">
+      <div class="titulo">Tu situación crediticia (Veraz)</div>
+      <div class="cat">${verazActual.etiqueta}</div>
+      <div class="detalle">Categoría ${verazActual.categoria} · ${verazActual.situacion}<br>
+      Ajuste: <b>${verazActual.ajusteTasa >= 0 ? '+' : ''}${verazActual.ajusteTasa}%</b><br>
+      Máximo: <b>$${verazActual.montoMaximo.toLocaleString('es-AR')}</b></div>
+      <div class="score-bar"><div class="fill" style="width:${pct}%"></div></div>
+    </div>`;
+  if (!verazActual.apto) {
+    document.getElementById('listaTipos').innerHTML = `<div class="error">🚫 Tu Veraz no permite solicitar préstamos.</div>`;
+    return;
+  }
+  const rt = await llamarBackend('listarTiposPrestamo');
+  if (!rt.ok) { alert(rt.error); return; }
+  tiposPrestamo = rt.tipos;
+  document.getElementById('listaTipos').innerHTML = tiposPrestamo.map(t => {
+    const tna = t.tnaBase + verazActual.ajusteTasa;
+    return `<div class="tipo-prestamo" onclick="elegirTipo('${t.id}')">
+      <div class="head"><div class="nombre">${t.nombre}</div><div class="tna">${tna}% TNA</div></div>
+      <div class="desc">${t.descripcion}</div>
+      <div class="rango">Monto: $${t.montoMin.toLocaleString('es-AR')} a $${t.montoMax.toLocaleString('es-AR')}<br>Plazos: ${t.plazos.join(', ')} meses</div>
+    </div>`;
+  }).join('');
+}
+function elegirTipo(tipoId) {
+  tipoSeleccionado = tiposPrestamo.find(t => t.id === tipoId);
+  mostrar('p22');
+  document.getElementById('tituloSimulador').textContent = '💳 ' + tipoSeleccionado.nombre;
+  const tna = tipoSeleccionado.tnaBase + verazActual.ajusteTasa;
+  document.getElementById('infoTipo').innerHTML = `<b>${tipoSeleccionado.nombre}</b><br>${tipoSeleccionado.descripcion}<br>
+    TNA base: <b>${tipoSeleccionado.tnaBase}%</b> · Ajuste: <b>${verazActual.ajusteTasa >= 0 ? '+' : ''}${verazActual.ajusteTasa}%</b> · TNA final: <b style="color:#00a650">${tna}%</b>`;
+  const sel = document.getElementById('plazoPrestamo');
+  sel.innerHTML = tipoSeleccionado.plazos.map(p => `<option value="${p}">${p} meses</option>`).join('');
+  const sugerido = Math.min(tipoSeleccionado.montoMax, verazActual.montoMaximo, 100000);
+  document.getElementById('montoPrestamo').value = Math.max(sugerido, tipoSeleccionado.montoMin);
+  actualizarSimulacion();
+}
+async function actualizarSimulacion() {
+  const monto = Number(document.getElementById('montoPrestamo').value);
+  const meses = Number(document.getElementById('plazoPrestamo').value);
+  const cont = document.getElementById('resultadoSimulacion');
+  const btn = document.getElementById('btnSolicitar');
+  if (!monto || !meses || !tipoSeleccionado) { cont.innerHTML = ''; btn.style.display = 'none'; return; }
+  const r = await llamarBackend('simularPrestamo', { userId: sesion.userId, tipoId: tipoSeleccionado.id, monto, meses });
+  if (!r.ok) { cont.innerHTML = `<div class="error">${r.error}</div>`; btn.style.display = 'none'; return; }
+  const s = r.simulacion;
+  cont.innerHTML = `<div class="simulador-box">
+    <div class="fila"><span class="lbl">Monto</span><span class="val">$${s.monto.toLocaleString('es-AR')}</span></div>
+    <div class="fila"><span class="lbl">Plazo</span><span class="val">${s.meses} meses</span></div>
+    <div class="fila"><span class="lbl">TNA base</span><span class="val">${s.tnaBase}%</span></div>
+    <div class="fila"><span class="lbl">Ajuste Veraz (cat ${s.verazCategoria})</span><span class="val">${s.ajusteVeraz >= 0 ? '+' : ''}${s.ajusteVeraz}%</span></div>
+    <div class="fila"><span class="lbl">TNA final</span><span class="val" style="color:#00a650">${s.tnaFinal}%</span></div>
+    <div class="fila"><span class="lbl">Interés total</span><span class="val" style="color:#dc2626">$${s.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
+    <div class="fila total"><span class="lbl">Cuota mensual</span><span class="val">$${s.cuota.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
+    <div class="fila total"><span class="lbl">Total</span><span class="val">$${s.total.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
+  </div>`;
+  btn.style.display = 'block';
+}
+async function confirmarSolicitudPrestamo() {
+  const monto = Number(document.getElementById('montoPrestamo').value);
+  const meses = Number(document.getElementById('plazoPrestamo').value);
+  const msg = document.getElementById('msgPrestamo'); msg.innerHTML = '';
+  if (!confirm(`¿Solicitar $${monto.toLocaleString('es-AR')} en ${meses} cuotas?`)) return;
+  log('POST /api/prestamos/solicitar', 'req');
+  const r = await llamarBackend('solicitarPrestamo', { userId: sesion.userId, tipoId: tipoSeleccionado.id, monto, meses });
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  log('← 200 OK id=' + r.idOperacion, 'ok');
+  const c = r.comprobante;
+  document.getElementById('comprobantePrestamo').innerHTML = `
+    <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Préstamo acreditado</div>
+    <div style="font-weight:700">${r.idOperacion}</div></div>
+    <strong>Tipo:</strong> ${c.tipoNombre}<br>
+    <strong>Monto:</strong> $${c.monto.toLocaleString('es-AR')}<br>
+    <strong>Plazo:</strong> ${c.meses} cuotas<br>
+    <strong>TNA:</strong> ${c.tnaFinal}%<br>
+    <strong>Cuota:</strong> $${c.cuota.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Total:</strong> $${c.total.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Interés:</strong> $${c.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR',{minimumFractionDigits:2})}`;
+  mostrar('p24');
+  await actualizarSaldos();
+}
+async function verCuotas(idPrestamo) {
+  idPrestamoActual = idPrestamo;
+  mostrar('p23');
+  document.getElementById('msgCuota').innerHTML = '';
+  const r = await llamarBackend('listarCuotas', { idPrestamo });
+  if (!r.ok) { alert(r.error); return; }
+  const pagadas = r.cuotas.filter(c => c.estado === 'PAGADA').length;
+  const total = r.cuotas.length;
+  const pendientes = r.cuotas.filter(c => c.estado === 'PENDIENTE');
+  const vencidas = pendientes.filter(c => c.mora > 0);
+  const prox = pendientes[0];
+
+  document.getElementById('infoPrestamo').innerHTML =
+    `<b>${idPrestamo}</b><br>Cuotas pagadas: ${pagadas} / ${total}<br>` +
+    (vencidas.length > 0 ? `⚠️ <b style="color:#dc2626">${vencidas.length} cuota(s) con mora</b><br>` : '') +
+    (prox ? `Próxima: <b>$${prox.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> vence ${new Date(prox.vencimiento).toLocaleDateString('es-AR')}` : '🎉 <b>Préstamo cancelado</b>');
+
+  // Mostrar botón refinanciar si hay ≥1 cuota pendiente
+  document.getElementById('btnRefinanciar').style.display = pendientes.length > 0 ? 'block' : 'none';
+
+  document.getElementById('listaCuotas').innerHTML = r.cuotas.map(c => {
+    const venc = new Date(c.vencimiento);
+    const vencida = venc < new Date() && c.estado === 'PENDIENTE';
+    const clase = c.estado === 'PAGADA' ? 'PAGADA' : (c.estado === 'REFINANCIADA' ? 'REFINANCIADA' : '');
+    return `<div class="cuota-mini ${clase}">
+      <div style="display:flex;align-items:center;gap:8px;flex:1">
+        <span class="num">${c.numero}</span>
+        <div>
+          <div style="font-weight:600">$${c.montoConMora.toLocaleString('es-AR',{minimumFractionDigits:2})}</div>
+          <div style="font-size:.65rem;color:${vencida ? '#dc2626' : '#888'}">
+            Vence: ${venc.toLocaleDateString('es-AR')}${vencida ? ' ⚠️' : ''}
+            ${c.mora > 0 ? ` · Mora: $${c.mora.toLocaleString('es-AR')}` : ''}
+          </div>
+        </div>
+      </div>
+      ${c.estado === 'PENDIENTE'
+        ? `<button class="${c.mora > 0 ? 'btn-mora' : 'btn-pagar'}" onclick="event.stopPropagation(); pagarCuota('${c.idCuota}')">Pagar</button>`
+        : `<span style="font-size:.68rem;color:${c.estado === 'PAGADA' ? '#00a650' : '#f59e0b'};font-weight:700">${c.estado === 'PAGADA' ? '✅ PAGADA' : '🔄 REFIN.'}</span>`}
+    </div>`;
+  }).join('');
+}
+async function pagarCuota(idCuota) {
+  if (!confirm('¿Pagar esta cuota?')) return;
+  const msg = document.getElementById('msgCuota'); msg.innerHTML = '';
+  log('POST /api/prestamos/pagar', 'req');
+  const r = await llamarBackend('pagarCuota', { userId: sesion.userId, idCuota });
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  const moraMsg = r.moraCobrada > 0 ? `<br><span style="color:#dc2626">Mora incluida: $${r.moraCobrada.toLocaleString('es-AR')}</span>` : '';
+  msg.innerHTML = `<div class="exito">✅ Cuota ${r.cuotaPagada} pagada. Total: $${r.totalPagado.toLocaleString('es-AR')}${moraMsg}</div>`;
+  await actualizarSaldos();
+  await verCuotas(idPrestamoActual);
+}
+async function refinanciarActual() {
+  if (!idPrestamoActual) return;
+  const confirmar = confirm('¿Refinanciar todas las cuotas pendientes?\n\nSe generará un nuevo préstamo a 12 meses con un recargo del 15%. Tu categoría Veraz bajará 1 nivel.');
+  if (!confirmar) return;
+  const msg = document.getElementById('msgCuota'); msg.innerHTML = '';
+  log('POST /api/prestamos/refinanciar', 'req');
+  log('→ Calculando cuotas pendientes + mora...');
+  const r = await llamarBackend('refinanciarPrestamo', { userId: sesion.userId, idPrestamo: idPrestamoActual });
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  log(`→ Nuevo préstamo: ${r.idOperacion}`, 'ok');
+  log(`→ Veraz del usuario actualizado`, 'info');
+  msg.innerHTML = `<div class="exito">✅ Refinanciación exitosa<br>
+    Monto original: <b>$${r.montoOriginal.toLocaleString('es-AR')}</b><br>
+    Recargo (15%): <b>$${r.recargo.toLocaleString('es-AR')}</b><br>
+    Nuevo monto: <b>$${r.nuevoMonto.toLocaleString('es-AR')}</b><br>
+    Nueva cuota: <b>$${r.cuota.toLocaleString('es-AR',{minimumFractionDigits:2})}</b> a ${r.meses} meses<br>
+    ID: ${r.idOperacion}</div>`;
+  await actualizarSaldos();
+  setTimeout(() => irAPrestamos(), 1500);
+}
+
+// ==================== PLAZO FIJO ====================
+async function irAPlazoFijo() { mostrar('p25'); await cargarPlazosFijos(); }
+async function cargarPlazosFijos() {
+  const r = await llamarBackend('listarPlazosFijos', { userId: sesion.userId });
+  const cont = document.getElementById('listaPF');
+  const totalEl = document.getElementById('totalPF');
+  if (!r.ok || !r.plazos || r.plazos.length === 0) {
+    totalEl.textContent = 'Sin plazos fijos';
+    cont.innerHTML = `<div class="mp-card" style="text-align:center;padding:24px">
+      <div style="font-size:2.5rem">🏦</div>
+      <div style="color:#666;font-size:.85rem;margin-top:8px">Sin plazos fijos activos.<br>
+      <span style="font-size:.75rem">Tocá "+ Constituir"</span></div></div>`;
+    return;
+  }
+  const activos = r.plazos.filter(p => p.estado === 'ACTIVO' || p.estado === 'VENCIDO').length;
+  totalEl.textContent = `${r.plazos.length} en total · ${activos} activos`;
+  cont.innerHTML = r.plazos.map(p => {
+    const fecha = new Date(p.fecha).toLocaleDateString('es-AR');
+    const venc = new Date(p.fechaVencimiento).toLocaleDateString('es-AR');
+    const botonRescate = (p.estado === 'ACTIVO' || p.estado === 'VENCIDO')
+      ? `<button class="btn-mp green" style="margin-top:8px;padding:8px;font-size:.75rem" onclick="event.stopPropagation(); rescatarPF('${p.id}')">💰 ${p.estado === 'VENCIDO' ? 'Retirar (vencido)' : 'Rescatar anticipado'}</button>`
+      : '';
+    return `<div class="pf-item">
+      <div class="head"><div class="tipo">${p.tipoNombre}</div>
+      <div class="estado ${p.estado}">${p.estado}</div></div>
+      <div class="info">Monto: <b>$${p.monto.toLocaleString('es-AR')}</b> · TNA: <b>${p.tna}%</b> · ${p.dias} días</div>
+      <div class="info">Interés: <b style="color:#00a650">+$${p.interesEstimado.toLocaleString('es-AR')}</b> · Total al vencimiento: <b>$${p.montoAlVencimiento.toLocaleString('es-AR')}</b></div>
+      <div class="info" style="color:#888;font-size:.68rem">Constituido: ${fecha} · Vence: ${venc}</div>
+      ${p.estado === 'RESCATADO' ? `<div class="info" style="color:#888;font-size:.68rem">Rescatado: ${new Date(p.fechaRescate).toLocaleDateString('es-AR')} por $${p.montoRescatado.toLocaleString('es-AR')}</div>` : ''}
+      ${botonRescate}
+    </div>`;
+  }).join('');
+}
+async function nuevoPlazoFijo() {
+  mostrar('p26');
+  const r = await llamarBackend('listarTiposPlazoFijo');
+  if (!r.ok) { alert(r.error); return; }
+  tiposPF = r.tipos;
+  log(`← ${tiposPF.length} tipos PF`, 'ok');
+  document.getElementById('listaTiposPF').innerHTML = tiposPF.map(t =>
+    `<div class="tipo-prestamo" onclick="elegirTipoPF('${t.id}')">
+      <div class="head"><div class="nombre">${t.nombre}</div><div class="tna">${t.tna}% TNA</div></div>
+      <div class="desc">${t.descripcion}</div>
+      <div class="rango">Monto: $${t.montoMin.toLocaleString('es-AR')} a $${t.montoMax.toLocaleString('es-AR')}</div>
+    </div>`).join('');
+}
+function elegirTipoPF(tipoId) {
+  tipoPFSeleccionado = tiposPF.find(t => t.id === tipoId);
+  mostrar('p27');
+  document.getElementById('tituloSimPF').textContent = '🏦 ' + tipoPFSeleccionado.nombre;
+  document.getElementById('infoTipoPF').innerHTML =
+    `<b>${tipoPFSeleccionado.nombre}</b><br>${tipoPFSeleccionado.descripcion}<br>
+     Plazo: <b>${tipoPFSeleccionado.dias} días</b> · TNA: <b style="color:#00a650">${tipoPFSeleccionado.tna}%</b>`;
+  const sugerido = Math.min(tipoPFSeleccionado.montoMax, 100000);
+  document.getElementById('montoPF').value = Math.max(sugerido, tipoPFSeleccionado.montoMin);
+  actualizarSimPF();
+}
+async function actualizarSimPF() {
+  const monto = Number(document.getElementById('montoPF').value);
+  const cont = document.getElementById('resultadoSimPF');
+  const btn = document.getElementById('btnConstituirPF');
+  if (!monto || !tipoPFSeleccionado) { cont.innerHTML = ''; btn.style.display = 'none'; return; }
+  const r = await llamarBackend('simularPlazoFijo', { tipoId: tipoPFSeleccionado.id, monto });
+  if (!r.ok) { cont.innerHTML = `<div class="error">${r.error}</div>`; btn.style.display = 'none'; return; }
+  const s = r.simulacion;
+  cont.innerHTML = `<div class="simulador-box">
+    <div class="fila"><span class="lbl">Capital invertido</span><span class="val">$${s.monto.toLocaleString('es-AR')}</span></div>
+    <div class="fila"><span class="lbl">Plazo</span><span class="val">${s.dias} días</span></div>
+    <div class="fila"><span class="lbl">TNA</span><span class="val">${s.tna}%</span></div>
+    <div class="fila"><span class="lbl">Interés ganado</span><span class="val" style="color:#00a650">+$${s.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
+    <div class="fila total"><span class="lbl">Total al vencimiento</span><span class="val">$${s.total.toLocaleString('es-AR',{minimumFractionDigits:2})}</span></div>
+    <div class="fila" style="font-size:.72rem;color:#888"><span class="lbl">Vence</span><span class="val">${new Date(s.fechaVencimiento).toLocaleDateString('es-AR')}</span></div>
+  </div>`;
+  btn.style.display = 'block';
+}
+async function confirmarConstituirPF() {
+  const monto = Number(document.getElementById('montoPF').value);
+  const msg = document.getElementById('msgPF'); msg.innerHTML = '';
+  if (!confirm(`¿Constituir plazo fijo de $${monto.toLocaleString('es-AR')} a ${tipoPFSeleccionado.dias} días?`)) return;
+  log('POST /api/plazofijo/constituir', 'req');
+  const r = await llamarBackend('constituirPlazoFijo', { userId: sesion.userId, tipoId: tipoPFSeleccionado.id, monto });
+  if (!r.ok) { log('← ' + r.error, 'err'); msg.innerHTML = `<div class="error">${r.error}</div>`; return; }
+  log('← 200 OK id=' + r.idOperacion, 'ok');
+  const c = r.comprobante;
+  document.getElementById('comprobantePF').innerHTML = `
+    <div style="text-align:center;margin-bottom:10px"><div style="font-size:.68rem;opacity:.8">Plazo fijo</div>
+    <div style="font-weight:700">${r.idOperacion}</div></div>
+    <strong>Producto:</strong> ${c.tipoNombre}<br>
+    <strong>Capital:</strong> $${c.monto.toLocaleString('es-AR')}<br>
+    <strong>Plazo:</strong> ${c.dias} días<br>
+    <strong>TNA:</strong> ${c.tna}%<br>
+    <strong>Interés estimado:</strong> $${c.interes.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Total al vencimiento:</strong> $${c.total.toLocaleString('es-AR',{minimumFractionDigits:2})}<br>
+    <strong>Vence:</strong> ${new Date(c.fechaVencimiento).toLocaleDateString('es-AR')}<br>
+    <strong>Nuevo saldo:</strong> $${Number(r.nuevoSaldo).toLocaleString('es-AR',{minimumFractionDigits:2})}`;
+  mostrar('p28');
+  await actualizarSaldos();
+}
+async function rescatarPF(id) {
+  if (!confirm('¿Rescatar este plazo fijo?\n\nSi es antes del vencimiento, se aplica una penalidad del 50% del interés ganado.')) return;
+  log('POST /api/plazofijo/rescatar', 'req');
+  const r = await llamarBackend('rescatarPlazoFijo', { userId: sesion.userId, idPlazo: id });
+  if (!r.ok) { alert(r.error); return; }
+  log(`← Rescate ${r.tipoRescate}: $${r.montoFinal}`, 'ok');
+  if (r.tipoRescate === 'VENCIMIENTO') {
+    alert(`✅ Rescate completo\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés ganado: +$${r.interesFinal.toLocaleString('es-AR')}\nTotal acreditado: $${r.montoFinal.toLocaleString('es-AR')}`);
+  } else {
+    alert(`⚠️ Rescate anticipado\n\nCapital: $${r.capital.toLocaleString('es-AR')}\nInterés ganado: +$${r.interesFinal.toLocaleString('es-AR')}\nPenalidad aplicada: -$${r.penalidad.toLocaleString('es-AR')}\nTotal acreditado: $${r.montoFinal.toLocaleString('es-AR')}`);
+  }
+  await actualizarSaldos();
+  await cargarPlazosFijos();
+}
+
+// ==================== RESET ====================
 function reiniciar() {
   if (stream) stream.getTracks().forEach(t => t.stop());
+  if (typeof qrScanner !== 'undefined') detenerEscaner();
   sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null,
     nombre:'', apellido:'', dni:'', email:'', telefono:'', saldos:{ars:0,usd:0}, destino:null };
-  document.getElementById('log').innerHTML =
-    '<div class="log-linea log-info">// Esperando acción del alumno...</div>';
-  ['email','telefono','otp','nombre','apellido','dni','pin'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
+  document.getElementById('log').innerHTML = '<div class="log-linea log-info">// Esperando acción del alumno...</div>';
+  ['email','telefono','otp','nombre','apellido','dni','pin'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.querySelectorAll('[id^="msg"]').forEach(m => m.innerHTML = '');
   document.getElementById('camaraBox').innerHTML = '📷';
   document.getElementById('btnCamara').style.display = 'block';
   document.getElementById('btnCapturar').style.display = 'none';
-  setHeaderSaludo('Bienvenido 👋');
+  document.getElementById('mpGreeting').textContent = 'Bienvenido 👋';
   mostrar('p1'); progreso(0);
 }
 </script>
