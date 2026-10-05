@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Billetera Virtual</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a; color: #e2e8f0;
+    min-height: 100vh; padding: 12px;
+  }
+  h1 { font-size: 1rem; text-align: center; margin-bottom: 8px; color: #38bdf8; }
+
+  .barra-config {
+    max-width: 1200px; margin: 0 auto 12px;
+    background: #fef3c7; color: #78350f;
+    padding: 10px 14px; border-radius: 8px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    font-size: 0.8rem;
+  }
+  .barra-config.ok { background: #dcfce7; color: #166534; }
+  .barra-config input {
+    flex: 1; min-width: 200px; padding: 6px 10px;
+    border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.8rem;
+  }
+  .barra-config button {
+    padding: 6px 12px; border: none; border-radius: 6px;
+    background: #0ea5e9; color: white; font-weight: 600;
+    cursor: pointer; font-size: 0.8rem;
+  }
+
+  .contenedor {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; max-width: 1200px; margin: 0 auto;
+  }
+  @media (max-width: 768px) { .contenedor { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: #1e293b; border-radius: 12px; padding: 16px;
+    border: 1px solid #334155; min-height: 380px;
+  }
+  .panel h2 {
+    font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 1px; color: #94a3b8;
+    margin-bottom: 12px; border-bottom: 1px solid #334155;
+    padding-bottom: 8px;
+  }
+  #app { background: #f8fafc; color: #0f172a; }
+  #app h2 { color: #64748b; border-color: #cbd5e1; }
+  #app h3 { font-size: 1.05rem; margin-bottom: 6px; }
+
+  .pantalla { display: none; }
+  .pantalla.activa { display: block; animation: fade 0.3s; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  label { display: block; font-size: 0.78rem; margin: 10px 0 4px; font-weight: 600; }
+  input, video, canvas {
+    width: 100%; padding: 10px; border: 1px solid #cbd5e1;
+    border-radius: 8px; font-size: 1rem; background: white;
+  }
+  video, canvas { padding: 0; background: #000; }
+
+  button {
+    margin-top: 12px; width: 100%; padding: 12px;
+    background: #0ea5e9; color: white; border: none;
+    border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  button:hover { background: #0284c7; }
+  button:disabled { background: #94a3b8; cursor: not-allowed; }
+
+  .error { background: #fee2e2; color: #991b1b; padding: 10px;
+    border-radius: 8px; font-size: 0.82rem; margin-top: 10px;
+    border-left: 4px solid #dc2626; }
+  .exito { background: #dcfce7; color: #166534; padding: 10px;
+    border-radius: 8px; font-size: 0.82rem; margin-top: 10px;
+    border-left: 4px solid #16a34a; }
+  .info { background: #dbeafe; color: #1e40af; padding: 10px;
+    border-radius: 8px; font-size: 0.82rem; margin-top: 10px;
+    border-left: 4px solid #2563eb; }
+
+  #backend { font-family: 'Courier New', monospace; font-size: 0.75rem; }
+  #log { max-height: 600px; overflow-y: auto; }
+  .log-linea { padding: 3px 0; border-bottom: 1px dashed #334155; word-wrap: break-word; }
+  .log-req { color: #fbbf24; } .log-ok { color: #4ade80; }
+  .log-err { color: #f87171; } .log-info { color: #94a3b8; }
+
+  .progreso { display: flex; gap: 3px; margin-bottom: 14px; }
+  .progreso span {
+    flex: 1; height: 4px; background: #cbd5e1;
+    border-radius: 2px; transition: background 0.3s;
+  }
+  .progreso span.hecho { background: #16a34a; }
+  .progreso span.activo { background: #0ea5e9; }
+
+  .camara-box {
+    width: 200px; height: 200px; margin: 14px auto;
+    border-radius: 50%; overflow: hidden; background: #cbd5e1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; position: relative;
+  }
+  .camara-box video { border-radius: 50%; height: 100%; object-fit: cover; }
+</style>
+</head>
+<body>
+
+<h1>🔐 Simulador de Billetera Virtual</h1>
+
+<div class="barra-config" id="barraConfig">
+  <span id="estadoConfig">⚠️ Modo local (sin backend). Los datos quedan solo en este navegador.</span>
+  <input type="text" id="inputUrl" placeholder="https://script.google.com/macros/s/.../exec">
+  <button onclick="guardarUrl()">Guardar URL</button>
+  <button onclick="probarConexion()" style="background:#16a34a">Probar conexión</button>
+</div>
+
+<div class="contenedor">
+  <!-- ============ PANEL IZQUIERDO ============ -->
+  <div class="panel" id="app">
+    <h2>📱 App del alumno</h2>
+    <div class="progreso" id="progreso">
+      <span class="activo"></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="pantalla activa" id="p1">
+      <h3>Crear cuenta</h3>
+      <label>Email</label>
+      <input type="email" id="email" placeholder="juan@escuela.edu">
+      <label>Teléfono (11 1234-5678)</label>
+      <input type="tel" id="telefono" placeholder="11 1234-5678">
+      <button onclick="paso1()">Registrarme</button>
+      <div id="msg1"></div>
+    </div>
+
+    <div class="pantalla" id="p2">
+      <h3>Verificá tu teléfono</h3>
+      <p style="font-size:0.82rem;color:#64748b;margin-top:6px">
+        Te enviamos un código de 6 dígitos. Miralo en el panel derecho 👉
+      </p>
+      <label>Código OTP</label>
+      <input type="text" id="otp" maxlength="6" placeholder="000000" inputmode="numeric">
+      <button onclick="paso2()">Verificar</button>
+      <div id="msg2"></div>
+    </div>
+
+    <div class="pantalla" id="p3">
+      <h3>Tus datos personales</h3>
+      <p style="font-size:0.75rem;color:#64748b;margin-top:4px">
+        Probá con DNI <b>12345678</b> (Juan Pérez) o <b>87654321</b> (María Gómez)
+      </p>
+      <label>Nombre</label>
+      <input type="text" id="nombre" placeholder="Juan">
+      <label>Apellido</label>
+      <input type="text" id="apellido" placeholder="Pérez">
+      <label>DNI (sin puntos)</label>
+      <input type="text" id="dni" placeholder="12345678" inputmode="numeric">
+      <button onclick="paso3()">Validar con RENAPER</button>
+      <div id="msg3"></div>
+    </div>
+
+    <div class="pantalla" id="p4">
+      <h3>Selfie y prueba de vida</h3>
+      <p style="font-size:0.8rem;color:#64748b;margin-top:6px">
+        Mirá a la cámara y tocá "Capturar".
+      </p>
+      <div class="camara-box" id="camaraBox">📷</div>
+      <button onclick="iniciarCamara()" id="btnCamara">Activar cámara</button>
+      <button onclick="capturarSelfie()" id="btnCapturar" style="display:none">📸 Capturar y validar</button>
+      <div id="msg4"></div>
+    </div>
+
+    <div class="pantalla" id="p5">
+      <h3>Controles de seguridad</h3>
+      <p style="font-size:0.8rem;color:#64748b;margin-top:6px">
+        Verificamos listas de personas expuestas políticamente (UIF) y sanciones (BCRA).
+      </p>
+      <button onclick="paso5()">Continuar</button>
+      <div id="msg5"></div>
+    </div>
+
+    <div class="pantalla" id="p6">
+      <h3>Creá tu PIN</h3>
+      <p style="font-size:0.8rem;color:#64748b;margin-top:6px">
+        6 dígitos. No uses 123456, 000000, etc.
+      </p>
+      <label>PIN</label>
+      <input type="password" id="pin" maxlength="6" placeholder="••••••" inputmode="numeric">
+      <button onclick="paso6()">Crear PIN</button>
+      <div id="msg6"></div>
+    </div>
+
+    <div class="pantalla" id="p7">
+      <h3>🎉 ¡Cuenta creada!</h3>
+      <div class="exito" id="datosCuenta"></div>
+      <button onclick="paso7()">Vincular este dispositivo</button>
+      <div id="msg7"></div>
+    </div>
+
+    <div class="pantalla" id="p8">
+      <h3>✅ Todo listo</h3>
+      <div class="exito">
+        Tu billetera está activa. Ya podés recibir y enviar dinero.<br>
+        <span style="font-size:0.75rem">(En las próximas clases vamos a agregar transferencias)</span>
+      </div>
+      <button onclick="reiniciar()">🔄 Reiniciar simulación</button>
+    </div>
+  </div>
+
+  <!-- ============ PANEL DERECHO ============ -->
+  <div class="panel" id="backend">
+    <h2>🖥️ Backend / Base de datos</h2>
+    <div id="log">
+      <div class="log-linea log-info">// Esperando acción del alumno...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== CONFIG ====================
+let APPS_SCRIPT_URL = localStorage.getItem('APPS_SCRIPT_URL') || '';
+const inputUrl = document.getElementById('inputUrl');
+if (APPS_SCRIPT_URL) {
+  inputUrl.value = APPS_SCRIPT_URL;
+  actualizarBarraConfig(true);
+}
+
+function guardarUrl() {
+  const url = inputUrl.value.trim();
+  if (!url) {
+    localStorage.removeItem('APPS_SCRIPT_URL');
+    APPS_SCRIPT_URL = '';
+    actualizarBarraConfig(false);
+    return;
+  }
+  APPS_SCRIPT_URL = url;
+  localStorage.setItem('APPS_SCRIPT_URL', url);
+  actualizarBarraConfig(true);
+  log('URL del backend guardada', 'ok');
+}
+
+function actualizarBarraConfig(ok) {
+  const barra = document.getElementById('barraConfig');
+  const estado = document.getElementById('estadoConfig');
+  if (ok) {
+    barra.classList.add('ok');
+    estado.textContent = '✅ Conectado al backend. Los datos se guardan en Drive.';
+  } else {
+    barra.classList.remove('ok');
+    estado.textContent = '⚠️ Modo local (sin backend). Los datos quedan solo en este navegador.';
+  }
+}
+
+async function probarConexion() {
+  if (!APPS_SCRIPT_URL) { log('Falta configurar la URL primero', 'err'); return; }
+  log('GET ' + APPS_SCRIPT_URL + '?action=ping', 'req');
+  try {
+    const r = await fetch(APPS_SCRIPT_URL + '?action=ping');
+    const j = await r.json();
+    log('← ' + JSON.stringify(j), 'ok');
+  } catch(e) {
+    log('← Error: ' + e.message, 'err');
+  }
+}
+
+// ==================== LOG ====================
+function log(texto, tipo='info') {
+  const div = document.getElementById('log');
+  const linea = document.createElement('div');
+  linea.className = 'log-linea log-' + tipo;
+  linea.textContent = texto;
+  div.appendChild(linea);
+  div.scrollTop = div.scrollHeight;
+}
+
+function mostrar(id) {
+  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+}
+
+function progreso(n) {
+  const barras = document.querySelectorAll('#progreso span');
+  barras.forEach((b, i) => {
+    b.className = i < n ? 'hecho' : (i === n ? 'activo' : '');
+  });
+}
+
+// ==================== ESTADO ====================
+let sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null };
+
+// ==================== LLAMADAS AL BACKEND ====================
+async function llamarBackend(action, params = {}) {
+  if (!APPS_SCRIPT_URL) {
+    log('(Modo local: no se envía al backend)', 'info');
+    return { ok:true, local:true };
+  }
+  const query = new URLSearchParams({ action, ...params }).toString();
+  log('GET ' + APPS_SCRIPT_URL + '?action=' + action, 'req');
+  try {
+    const r = await fetch(APPS_SCRIPT_URL + '?' + query);
+    const j = await r.json();
+    log('← ' + JSON.stringify(j).substring(0, 200), j.ok ? 'ok' : 'err');
+    return j;
+  } catch(e) {
+    log('← Error de red: ' + e.message, 'err');
+    return { ok:false, error:e.message };
+  }
+}
+
+// ==================== PASO 1 ====================
+async function paso1() {
+  const email = document.getElementById('email').value.trim();
+  const tel = document.getElementById('telefono').value.trim();
+  const msg = document.getElementById('msg1'); msg.innerHTML = '';
+
+  log('POST /api/registro', 'req');
+  log(`  Body: { email: "${email}", telefono: "${tel}" }`);
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    log('→ Validando email... ❌ FORMATO INVÁLIDO', 'err');
+    msg.innerHTML = '<div class="error">Formato de email inválido. Debe tener @ y un dominio.</div>';
+    return;
+  }
+  log('→ Validando email... ✅ OK', 'ok');
+
+  const soloDigitos = tel.replace(/\D/g, '');
+  if (soloDigitos.length < 10) {
+    log('→ Validando teléfono... ❌ INVÁLIDO', 'err');
+    msg.innerHTML = '<div class="error">Teléfono inválido. Ingresá 10 dígitos (ej: 11 1234-5678).</div>';
+    return;
+  }
+  log('→ Validando teléfono... ✅ OK', 'ok');
+
+  // Consultar backend si existe cuenta
+  const check = await llamarBackend('checkEmail', { email });
+  if (check && check.existe) {
+    log('→ Email ya registrado en la BD ❌', 'err');
+    msg.innerHTML = '<div class="error">Ya existe una cuenta con ese email.</div>';
+    return;
+  }
+  log('→ Verificando duplicados en la BD... ✅ No existe');
+
+  sesion.userId = 'usr_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  sesion.otp = String(Math.floor(100000 + Math.random() * 900000));
+  sesion.email = email; sesion.telefono = tel;
+
+  log(`→ INSERT INTO usuarios ("${sesion.userId}", "${email}", "PENDIENTE_OTP")`, 'ok');
+  log(`→ Generando OTP: ${sesion.otp}`, 'info');
+  log(`📨 SMS a ${tel}: "Tu código es ${sesion.otp}. Válido por 5 minutos."`, 'info');
+
+  // Guardar en backend
+  await llamarBackend('guardarLogOtp', {
+    userId: sesion.userId, email: email, telefono: tel, codigo: sesion.otp
+  });
+
+  msg.innerHTML = '<div class="exito">Registro iniciado. Mirá el SMS en el panel derecho 👉</div>';
+  progreso(1);
+  setTimeout(() => { mostrar('p2'); }, 700);
+}
+
+// ==================== PASO 2 ====================
+function paso2() {
+  const codigo = document.getElementById('otp').value.trim();
+  const msg = document.getElementById('msg2'); msg.innerHTML = '';
+
+  log('POST /api/otp/verificar', 'req');
+  log(`  Body: { userId: "${sesion.userId}", codigo: "${codigo}" }`);
+  log('→ SELECT codigo FROM logs_otp WHERE userId = ...');
+
+  if (codigo !== sesion.otp) {
+    log('→ Comparando códigos... ❌ NO COINCIDE', 'err');
+    msg.innerHTML = '<div class="error">Código incorrecto. Intentá de nuevo.</div>';
+    return;
+  }
+  log('→ Comparando códigos... ✅ COINCIDE', 'ok');
+  log('→ Verificando expiración (5 min)... ✅ VIGENTE', 'ok');
+  log('→ UPDATE usuarios SET estado = "OTP_VERIFICADO"', 'ok');
+
+  msg.innerHTML = '<div class="exito">¡Teléfono verificado!</div>';
+  progreso(2);
+  setTimeout(() => { mostrar('p3'); }, 700);
+}
+
+// ==================== PASO 3 ====================
+async function paso3() {
+  const nombre = document.getElementById('nombre').value.trim().toUpperCase();
+  const apellido = document.getElementById('apellido').value.trim().toUpperCase();
+  const dni = document.getElementById('dni').value.trim();
+  const msg = document.getElementById('msg3'); msg.innerHTML = '';
+
+  log('POST /api/renaper/validar', 'req');
+  log(`  Body: { dni: "${dni}", nombre: "${nombre}", apellido: "${apellido}" }`);
+
+  if (!/^\d{7,8}$/.test(dni)) {
+    log('→ Validando formato DNI... ❌', 'err');
+    msg.innerHTML = '<div class="error">El DNI debe tener 7 u 8 números, sin puntos.</div>';
+    return;
+  }
+  log('→ Validando formato DNI... ✅');
+  log(`→ GET https://api.renaper.gob.ar/consulta?dni=${dni}`);
+
+  const r = await llamarBackend('renaper', { dni });
+  if (r && r.ok && r.persona) {
+    log(`← 200 OK { nombre: "${r.persona.nombre}", apellido: "${r.persona.apellido}" }`, 'ok');
+    if (r.persona.nombre !== nombre || r.persona.apellido !== apellido) {
+      log('→ Comparando datos... ❌ NO COINCIDEN', 'err');
+      msg.innerHTML = '<div class="error">Los datos no coinciden con el Registro Nacional.</div>';
+      return;
+    }
+  } else if (!r.local && r.ok === false) {
+    log('← 404 DNI no encontrado', 'err');
+    msg.innerHTML = '<div class="error">DNI no encontrado en RENAPER.</div>';
+    return;
+  } else {
+    // Modo local: validar contra tabla interna
+    const tabla = { '12345678':['JUAN','PEREZ'], '87654321':['MARIA','GOMEZ'] };
+    if (!tabla[dni]) {
+      log('← 404 DNI no encontrado (modo local)', 'err');
+      msg.innerHTML = '<div class="error">DNI no encontrado. Probá con 12345678 o 87654321.</div>';
+      return;
+    }
+    if (tabla[dni][0] !== nombre || tabla[dni][1] !== apellido) {
+      log('→ Comparando datos... ❌ NO COINCIDEN', 'err');
+      msg.innerHTML = '<div class="error">Los datos no coinciden con el Registro Nacional.</div>';
+      return;
+    }
+  }
+  log('→ Comparando datos... ✅ COINCIDEN', 'ok');
+  sesion.nombre = nombre; sesion.apellido = apellido; sesion.dni = dni;
+
+  msg.innerHTML = '<div class="exito">Datos validados con RENAPER.</div>';
+  progreso(3);
+  setTimeout(() => { mostrar('p4'); }, 700);
+}
+
+// ==================== PASO 4: CÁMARA ====================
+let stream = null;
+async function iniciarCamara() {
+  const box = document.getElementById('camaraBox');
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user' } });
+    box.innerHTML = '';
+    const video = document.createElement('video');
+    video.autoplay = true; video.playsInline = true;
+    video.srcObject = stream;
+    box.appendChild(video);
+    document.getElementById('btnCamara').style.display = 'none';
+    document.getElementById('btnCapturar').style.display = 'block';
+    log('📷 Cámara activada', 'info');
+  } catch(e) {
+    log('⚠️ No se pudo acceder a la cámara: ' + e.message, 'err');
+    log('→ Usando selfie simulada', 'info');
+    // Generar selfie simulada con canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = 200; canvas.height = 200;
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0,0,200,200);
+    grad.addColorStop(0,'#3b82f6'); grad.addColorStop(1,'#8b5cf6');
+    ctx.fillStyle = grad; ctx.fillRect(0,0,200,200);
+    ctx.fillStyle = 'white'; ctx.font = 'bold 80px sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('👤', 100, 100);
+    sesion.selfieBase64 = canvas.toDataURL('image/jpeg', 0.6);
+    box.innerHTML = '✅';
+    document.getElementById('btnCamara').style.display = 'none';
+    document.getElementById('btnCapturar').style.display = 'block';
+  }
+}
+
+async function capturarSelfie() {
+  const msg = document.getElementById('msg4'); msg.innerHTML = '';
+
+  if (!sesion.selfieBase64) {
+    const video = document.querySelector('#camaraBox video');
+    if (video) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 320; canvas.height = 320;
+      canvas.getContext('2d').drawImage(video, 0, 0, 320, 320);
+      sesion.selfieBase64 = canvas.toDataURL('image/jpeg', 0.7);
+    }
+  }
+  if (stream) stream.getTracks().forEach(t => t.stop());
+
+  log('POST /api/verificacion/selfie', 'req');
+  log('  Body: { userId: "...", imagenBase64: "data:image/jpeg;base64,...(truncado)" }');
+  log('→ Ejecutando prueba de vida (liveness)...');
+  log('→ Comparando rostro con foto del DNI...');
+  const score = 85 + Math.floor(Math.random() * 14);
+  log(`  Score de similitud: ${score}/100`, 'ok');
+  log('→ Guardando selfie en Drive...', 'info');
+
+  // Enviar al backend
+  const r = await llamarBackend('guardarSelfie', {
+    userId: sesion.userId, dni: sesion.dni,
+    base64: sesion.selfieBase64.substring(0, 8000), // versión simplificada por URL
+    score: score
+  });
+  if (r && r.url) log('  📎 Archivo: ' + r.url, 'ok');
+
+  log('← 200 OK { verificado: true }', 'ok');
+  msg.innerHTML = `<div class="exito">Identidad verificada (score ${score}/100).</div>`;
+  progreso(4);
+  setTimeout(() => { mostrar('p5'); }, 900);
+}
+
+// ==================== PASO 5 ====================
+async function paso5() {
+  const msg = document.getElementById('msg5'); msg.innerHTML = '';
+  log('POST /api/seguridad/verificar', 'req');
+  log('→ Consultando lista PEP (UIF Res. 134/2018)...');
+
+  const r = await llamarBackend('verificarSeguridad', {
+    nombre: sesion.nombre, apellido: sesion.apellido, dni: sesion.dni
+  });
+
+  if (r && r.enLista) {
+    log('  ⚠️ COINCIDENCIA EN LISTA', 'err');
+    log('← 200 OK { riesgo: "ALTO", requiere_revision: true }', 'err');
+    msg.innerHTML = '<div class="error">Tu solicitud será revisada manualmente. Te contactaremos en 48 hs.</div>';
+    return;
+  }
+  log('→ No encontrado en listas PEP ✅', 'ok');
+  log('→ Consultando listas de sanciones (BCRA)... No encontrado ✅', 'ok');
+  log('→ INSERT INTO logs_seguridad (resultado: "APROBADO")', 'ok');
+  log('← 200 OK { riesgo: "BAJO", aprobado: true }', 'ok');
+
+  msg.innerHTML = '<div class="exito">Sin coincidencias en listas de riesgo.</div>';
+  progreso(5);
+  setTimeout(() => { mostrar('p6'); }, 900);
+}
+
+// ==================== PASO 6 ====================
+async function paso6() {
+  const pin = document.getElementById('pin').value.trim();
+  const msg = document.getElementById('msg6'); msg.innerHTML = '';
+
+  log('POST /api/pin/crear', 'req');
+  log('  Body: { userId: "...", pin: "******" }');
+
+  if (!/^\d{6}$/.test(pin)) {
+    log('→ Validando formato... ❌ debe ser 6 dígitos', 'err');
+    msg.innerHTML = '<div class="error">El PIN debe tener exactamente 6 dígitos.</div>';
+    return;
+  }
+  if (['123456','000000','111111','654321','121212'].includes(pin)) {
+    log('→ Validando fortaleza... ❌ PIN DÉBIL', 'err');
+    msg.innerHTML = '<div class="error">PIN muy fácil. Elegí otro.</div>';
+    return;
+  }
+  log('→ Validando fortaleza... ✅');
+  log('→ Generando salt aleatorio...');
+  log('→ Calculando hash SHA-256(pin + salt)...');
+  log('→ INSERT INTO usuarios (pin_hash, pin_salt) — NUNCA se guarda el PIN en claro 🔒', 'ok');
+
+  // Generamos hash REAL en el cliente solo para mostrar (en producción va en server)
+  const hashHex = await sha256(pin + 'salt_demo_' + sesion.userId);
+  log('  Hash: ' + hashHex.substring(0, 32) + '...', 'info');
+  sesion.pinHash = hashHex;
+
+  log('← 200 OK', 'ok');
+  msg.innerHTML = '<div class="exito">PIN creado de forma segura.</div>';
+  progreso(6);
+  setTimeout(() => { generarCuenta(); mostrar('p7'); }, 700);
+}
+
+async function sha256(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ==================== PASO 7: CVU Y ALIAS ====================
+async function generarCuenta() {
+  const dni = sesion.dni;
+  const bloque1 = '00000001';
+  const bloque2 = dni.padStart(8,'0') + '000001';
+  const dv1 = (parseInt(bloque1.substring(0,7)) % 9 + 1);
+  const dv2 = (parseInt(bloque2.substring(0,6)) % 9 + 1);
+  sesion.cvu = bloque1.substring(0,7) + dv1 + bloque2.substring(0,13) + dv2;
+  sesion.alias = sesion.nombre.toLowerCase().replace(/\s/g,'') + '.' +
+                 sesion.apellido.toLowerCase().replace(/\s/g,'') + '.mp';
+
+  log('POST /api/cuenta/crear', 'req');
+  log('→ Generando CVU...');
+  log(`  Bloque PSP: ${bloque1} | Bloque usuario: ${bloque2}`);
+  log(`  CVU: ${sesion.cvu}`, 'ok');
+  log(`→ Generando alias: "${sesion.alias}" (disponible)`, 'ok');
+  log('→ INSERT INTO ledger (userId, cvu, alias, saldo=0, "ARS")', 'ok');
+
+  await llamarBackend('crearCuenta', {
+    userId: sesion.userId, email: sesion.email, telefono: sesion.telefono,
+    nombre: sesion.nombre, apellido: sesion.apellido, dni: sesion.dni,
+    cvu: sesion.cvu, alias: sesion.alias, pinHash: sesion.pinHash || ''
+  });
+
+  log('← 201 Created', 'ok');
+
+  document.getElementById('datosCuenta').innerHTML =
+    `<strong>CVU:</strong> ${sesion.cvu}<br>
+     <strong>Alias:</strong> ${sesion.alias}<br>
+     <strong>Titular:</strong> ${sesion.nombre} ${sesion.apellido}<br>
+     <strong>Saldo:</strong> $0,00 ARS`;
+
+  progreso(7);
+}
+
+// ==================== PASO 8 ====================
+async function paso7() {
+  log('POST /api/dispositivo/vincular', 'req');
+  const deviceId = 'dev_' + Math.random().toString(36).slice(2, 12);
+  log(`→ Generando deviceId... "${deviceId}"`);
+  log('→ INSERT INTO dispositivos (userId, deviceId, confiable=true)');
+  log('→ Generando token biométrico...');
+  await llamarBackend('vincularDispositivo', { userId: sesion.userId, deviceId });
+  log('→ UPDATE usuarios SET estado = "ACTIVO"', 'ok');
+  log('← 200 OK', 'ok');
+
+  log('', 'info');
+  log('══════════ RESUMEN ══════════', 'ok');
+  log(`Usuario: ${sesion.email}`, 'ok');
+  log(`CVU: ${sesion.cvu}`, 'ok');
+  log(`Alias: ${sesion.alias}`, 'ok');
+  log('══════════════════════════════', 'ok');
+
+  progreso(8);
+  setTimeout(() => { mostrar('p8'); }, 700);
+}
+
+// ==================== REINICIAR ====================
+function reiniciar() {
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null };
+  document.getElementById('log').innerHTML =
+    '<div class="log-linea log-info">// Esperando acción del alumno...</div>';
+  ['email','telefono','otp','nombre','apellido','dni','pin'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('[id^="msg"]').forEach(m => m.innerHTML = '');
+  document.getElementById('camaraBox').innerHTML = '📷';
+  document.getElementById('btnCamara').style.display = 'block';
+  document.getElementById('btnCapturar').style.display = 'none';
+  mostrar('p1'); progreso(0);
+}
+</script>
+</body>
+</html>
