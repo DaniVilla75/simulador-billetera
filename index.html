@@ -134,7 +134,20 @@
   .cuota-item.REFINANCIADA .num{background:#f59e0b;color:#fff}
   .cuota-item .btn-pagar{padding:4px 10px;background:#009ee3;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
   .cuota-item .btn-mora{padding:4px 10px;background:#dc2626;color:#fff;border:none;border-radius:5px;font-size:.68rem;font-weight:600;cursor:pointer}
-  #backend{font-family:'Courier New',monospace;font-size:.72rem}
+    /* Splash y Login */
+  .splash{padding:40px 24px;text-align:center;display:flex;flex-direction:column;justify-content:center;min-height:560px}
+  .splash .logo{font-size:5rem;margin-bottom:16px}
+  .splash h2{font-size:1.5rem;color:#009ee3;font-weight:700;margin-bottom:6px}
+  .splash p{font-size:.85rem;color:#666;margin-bottom:32px}
+  .splash button{margin-bottom:12px}
+  .login-header{background:linear-gradient(135deg,#009ee3 0%,#0077b8 100%);color:#fff;padding:32px 20px 24px;text-align:center}
+  .login-header .logo{font-size:3rem;margin-bottom:8px}
+  .login-header h2{font-size:1.2rem;font-weight:600}
+  .login-header p{font-size:.78rem;opacity:.9;margin-top:4px}
+  .login-form{padding:24px 20px}
+  .login-link{display:block;text-align:center;color:#009ee3;font-size:.8rem;font-weight:600;margin-top:20px;cursor:pointer;text-decoration:none}
+  .login-link:hover{text-decoration:underline}
+ #backend{font-family:'Courier New',monospace;font-size:.72rem}
   #log{max-height:700px;overflow-y:auto}
   .log-linea{padding:3px 0;border-bottom:1px dashed #334155;word-wrap:break-word}
   .log-req{color:#fbbf24}.log-ok{color:#4ade80}
@@ -180,7 +193,33 @@
         <span></span><span></span><span></span><span></span>
       </div>
 
-      <div class="pantalla activa form-app" id="p1">
+           <div class="pantalla activa splash" id="p0">
+        <div class="logo">💙</div>
+        <h2>Mi Billetera</h2>
+        <p>Tu dinero, simple y seguro</p>
+        <button class="btn-mp" onclick="irALogin()">Iniciar sesión</button>
+        <button class="btn-mp outline" onclick="irARegistro()">Crear cuenta nueva</button>
+      </div>
+
+      <div class="pantalla" id="p0b">
+        <div class="login-header">
+          <div class="logo">💙</div>
+          <h2>Iniciar sesión</h2>
+          <p>Ingresá con tu email o alias</p>
+        </div>
+        <div class="login-form">
+          <label>Email o alias</label>
+          <input type="text" id="loginIdent" placeholder="juan.perez.mp" autocomplete="username">
+          <label>PIN (6 dígitos)</label>
+          <input type="password" id="loginPin" maxlength="6" inputmode="numeric" placeholder="••••••" autocomplete="current-password">
+          <button class="btn-mp" onclick="hacerLogin()">Ingresar</button>
+          <a class="login-link" onclick="irARegistro()">¿No tenés cuenta? Crear una nueva</a>
+          <a class="login-link" onclick="mostrar('p0')" style="color:#666">← Volver</a>
+        </div>
+        <div id="msgLogin" style="padding:0 20px 20px"></div>
+      </div>
+
+      <div class="pantalla form-app" id="p1">
         <h3>Crear cuenta</h3>
         <label>Email</label><input type="email" id="email" placeholder="juan@escuela.edu">
         <label>Teléfono</label><input type="tel" id="telefono" placeholder="11 1234-5678">
@@ -241,6 +280,10 @@
             <div class="mp-row" onclick="irAMiQR()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#7c3aed">📲</span> Mi código QR</div><div class="right" style="font-size:.75rem;color:#888">Mostrar →</div></div>
             <div class="mp-row" onclick="irAPrestamos()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#00a650">💳</span> Préstamos y créditos</div><div class="right" style="font-size:.75rem;color:#888">Ir →</div></div>
             <div class="mp-row" onclick="irAPlazoFijo()" style="cursor:pointer"><div class="left"><span class="avatar" style="background:#f59e0b">🏦</span> Plazo fijo</div><div class="right" style="font-size:.75rem;color:#888">Ir →</div></div>
+            <div class="mp-row" onclick="cerrarSesion()" style="cursor:pointer">
+              <div class="left"><span class="avatar" style="background:#6b7280">🚪</span> Cerrar sesión</div>
+              <div class="right" style="font-size:.75rem;color:#888">Salir →</div>
+            </div>
           </div>
         </div>
       </div>
@@ -505,9 +548,11 @@ function mostrar(id) {
   if (typeof qrScanner !== 'undefined' && qrScanner && id !== 'p17') detenerEscaner();
   document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
   document.getElementById(id).classList.add('activa');
-  const onb = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
-  document.getElementById('mpNav').style.display = onb ? 'none' : 'flex';
-  document.getElementById('mpSaldoBox').style.display = onb ? 'none' : 'block';
+  const preLogin = ['p0','p0b'].includes(id);
+  const onboarding = ['p1','p2','p3','p4','p5','p6','p7'].includes(id);
+  document.getElementById('mpNav').style.display = (preLogin || onboarding) ? 'none' : 'flex';
+  document.getElementById('mpSaldoBox').style.display = (preLogin || onboarding) ? 'none' : 'block';
+  document.getElementById('progreso').style.display = preLogin ? 'none' : 'flex';
   actualizarNav(id);
 }
 function actualizarNav(p) {
@@ -711,8 +756,11 @@ async function generarCuenta() {
   log('POST /api/cuenta/crear', 'req');
   log(`→ CVU: ${sesion.cvu}`, 'ok');
   log(`→ Alias: ${sesion.alias}`, 'ok');
+  log('→ Enviando PIN al servidor para hashear...', 'info');
   await llamarBackend('crearCuenta', { userId:sesion.userId, email:sesion.email, telefono:sesion.telefono,
-    nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni, cvu:sesion.cvu, alias:sesion.alias, pinHash:sesion.pinHash||'' });
+    nombre:sesion.nombre, apellido:sesion.apellido, dni:sesion.dni, cvu:sesion.cvu,
+    alias:sesion.alias, pin:sesion.pinPlano || '' });
+  log('→ NUNCA se guarda el PIN en claro 🔒', 'ok');
   document.getElementById('datosCuenta').innerHTML =
     `<strong>CVU:</strong> ${sesion.cvu}<br><strong>Alias:</strong> ${sesion.alias}<br>
      <strong>Titular:</strong> ${sesion.nombre} ${sesion.apellido}<br><strong>Saldo:</strong> $0,00 ARS`;
@@ -1267,7 +1315,8 @@ function reiniciar() {
   if (stream) stream.getTracks().forEach(t => t.stop());
   if (typeof qrScanner !== 'undefined') detenerEscaner();
   sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null,
-    nombre:'', apellido:'', dni:'', email:'', telefono:'', saldos:{ars:0,usd:0}, destino:null };
+    nombre:'', apellido:'', dni:'', email:'', telefono:'',
+    saldos:{ars:0,usd:0}, destino:null, pinPlano:null };
   document.getElementById('log').innerHTML = '<div class="log-linea log-info">// Esperando acción del alumno...</div>';
   ['email','telefono','otp','nombre','apellido','dni','pin'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.querySelectorAll('[id^="msg"]').forEach(m => m.innerHTML = '');
@@ -1275,7 +1324,92 @@ function reiniciar() {
   document.getElementById('btnCamara').style.display = 'block';
   document.getElementById('btnCapturar').style.display = 'none';
   document.getElementById('mpGreeting').textContent = 'Bienvenido 👋';
-  mostrar('p1'); progreso(0);
+  progreso(0);
+  mostrar('p0');
+}
+
+ // ============================================================
+// ================== LOGIN / LOGOUT ==========================
+// ============================================================
+
+function irALogin() {
+  document.getElementById('loginIdent').value = '';
+  document.getElementById('loginPin').value = '';
+  document.getElementById('msgLogin').innerHTML = '';
+  mostrar('p0b');
+}
+
+function irARegistro() {
+  // Reiniciar la sesión por si venía de un login fallido
+  sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null,
+    nombre:'', apellido:'', dni:'', email:'', telefono:'',
+    saldos:{ars:0,usd:0}, destino:null, pinPlano:null };
+  // Limpiar formularios de registro
+  ['email','telefono','otp','nombre','apellido','dni','pin'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.querySelectorAll('[id^="msg"]').forEach(m => m.innerHTML = '');
+  document.getElementById('camaraBox').innerHTML = '📷';
+  document.getElementById('btnCamara').style.display = 'block';
+  document.getElementById('btnCapturar').style.display = 'none';
+  progreso(0);
+  mostrar('p1');
+}
+
+async function hacerLogin() {
+  const ident = document.getElementById('loginIdent').value.trim();
+  const pin = document.getElementById('loginPin').value.trim();
+  const msg = document.getElementById('msgLogin'); msg.innerHTML = '';
+  log('POST /api/login', 'req');
+  log(`  Body: { identificador: "${ident}", pin: "******" }`);
+
+  if (!ident) { msg.innerHTML = '<div class="error">Ingresá tu email o alias.</div>'; return; }
+  if (!/^\d{6}$/.test(pin)) { msg.innerHTML = '<div class="error">El PIN debe tener 6 dígitos.</div>'; return; }
+
+  log('→ Buscando usuario en la BD...');
+  const r = await llamarBackend('loginUsuario', { identificador: ident, pin });
+
+  if (!r.ok) {
+    log('← 401 ' + r.error, 'err');
+    msg.innerHTML = `<div class="error">${r.error}</div>`;
+    return;
+  }
+
+  log('← 200 OK { userId: "' + r.usuario.userId + '" }', 'ok');
+  log('→ Sesión iniciada. Cargando datos...', 'ok');
+
+  // Poblar la sesión con los datos del usuario
+  sesion = {
+    userId: r.usuario.userId,
+    cvu: r.usuario.cvu,
+    alias: r.usuario.alias,
+    nombre: r.usuario.nombre,
+    apellido: r.usuario.apellido,
+    dni: r.usuario.dni,
+    email: r.usuario.email,
+    telefono: r.usuario.telefono,
+    saldos: r.saldos || { ars:0, usd:0 },
+    destino: null,
+    selfieBase64: null,
+    otp: null,
+    pinPlano: null
+  };
+
+  msg.innerHTML = '<div class="exito">✅ Ingreso exitoso. Redirigiendo...</div>';
+  setTimeout(() => { irADashboard(); }, 600);
+}
+
+function cerrarSesion() {
+  if (!confirm('¿Cerrar sesión?')) return;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  if (typeof qrScanner !== 'undefined') detenerEscaner();
+  sesion = { userId:null, otp:null, cvu:null, alias:null, selfieBase64:null,
+    nombre:'', apellido:'', dni:'', email:'', telefono:'',
+    saldos:{ars:0,usd:0}, destino:null, pinPlano:null };
+  document.getElementById('log').innerHTML = '<div class="log-linea log-info">// Sesión cerrada</div>';
+  document.getElementById('mpGreeting').textContent = 'Bienvenido 👋';
+  progreso(0);
+  mostrar('p0');
 }
 </script>
 </body>
