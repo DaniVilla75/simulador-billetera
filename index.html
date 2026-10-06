@@ -1064,26 +1064,46 @@ async function cargarPrestamos() {
         <span style="float:right;color:#009ee3;font-weight:600">Ver cuotas →</span></div></div>`;
   }).join('');
 }
+let cargandoNuevoPrestamo = false;
 async function nuevoPrestamo() {
-  mostrar('p21');
-  const rv = await llamarBackend('consultarVeraz', { userId: sesion.userId });
-  if (!rv.ok) { alert(rv.error); return; }
-  verazActual = rv.veraz;
-  log(`← Veraz cat ${verazActual.categoria} (${verazActual.etiqueta})`, 'ok');
-  const pct = (6 - verazActual.categoria + 1) / 6 * 100;
-  document.getElementById('verazBox').innerHTML = `
-    <div class="veraz-card" style="background:linear-gradient(135deg,${verazActual.color},${verazActual.color}dd)">
-      <div class="titulo">Tu situación crediticia (Veraz)</div>
-      <div class="cat">${verazActual.etiqueta}</div>
-      <div class="detalle">Categoría ${verazActual.categoria} · ${verazActual.situacion}<br>
-      Ajuste: <b>${verazActual.ajusteTasa >= 0 ? '+' : ''}${verazActual.ajusteTasa}%</b><br>
-      Máximo: <b>$${verazActual.montoMaximo.toLocaleString('es-AR')}</b></div>
-      <div class="score-bar"><div class="fill" style="width:${pct}%"></div></div>
-    </div>`;
-  if (!verazActual.apto) {
-    document.getElementById('listaTipos').innerHTML = `<div class="error">🚫 Tu Veraz no permite préstamos.</div>`;
-    return;
+  if (cargandoNuevoPrestamo) return;      // ← evita doble ejecución
+  cargandoNuevoPrestamo = true;
+  try {
+    mostrar('p21');
+    const rv = await llamarBackend('consultarVeraz', { userId: sesion.userId });
+    if (!rv.ok) { alert(rv.error); return; }
+    verazActual = rv.veraz;
+    log(`← Veraz cat ${verazActual.categoria} (${verazActual.etiqueta})`, 'ok');
+    const pct = (6 - verazActual.categoria + 1) / 6 * 100;
+    document.getElementById('verazBox').innerHTML = `
+      <div class="veraz-card" style="background:linear-gradient(135deg,${verazActual.color},${verazActual.color}dd)">
+        <div class="titulo">Tu situación crediticia (Veraz)</div>
+        <div class="cat">${verazActual.etiqueta}</div>
+        <div class="detalle">Categoría ${verazActual.categoria} · ${verazActual.situacion}<br>
+        Ajuste: <b>${verazActual.ajusteTasa >= 0 ? '+' : ''}${verazActual.ajusteTasa}%</b><br>
+        Máximo: <b>$${verazActual.montoMaximo.toLocaleString('es-AR')}</b></div>
+        <div class="score-bar"><div class="fill" style="width:${pct}%"></div></div>
+      </div>`;
+    if (!verazActual.apto) {
+      document.getElementById('listaTipos').innerHTML = `<div class="error">🚫 Tu Veraz no permite préstamos.</div>`;
+      return;
+    }
+    const rt = await llamarBackend('listarTiposPrestamo');
+    if (!rt.ok) { alert(rt.error); return; }
+    tiposPrestamo = rt.tipos;
+    log(`← ${tiposPrestamo.length} tipos disponibles`, 'ok');
+    document.getElementById('listaTipos').innerHTML = tiposPrestamo.map(t => {
+      const tna = t.tnaBase + verazActual.ajusteTasa;
+      return `<div class="tipo-item" onclick="elegirTipo('${t.id}')">
+        <div class="head"><div class="nombre">${t.nombre}</div><div class="tna">${tna}% TNA</div></div>
+        <div class="desc">${t.descripcion}</div>
+        <div class="rango">Monto: $${t.montoMin.toLocaleString('es-AR')} a $${t.montoMax.toLocaleString('es-AR')}<br>Plazos: ${t.plazos.join(', ')} meses</div>
+      </div>`;
+    }).join('');
+  } finally {
+    cargandoNuevoPrestamo = false;
   }
+}
   const rt = await llamarBackend('listarTiposPrestamo');
   if (!rt.ok) { alert(rt.error); return; }
   tiposPrestamo = rt.tipos;
